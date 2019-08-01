@@ -1,0 +1,31 @@
+$white: #fff;
+$black: rgb(32, 33, 36);
+$grey-dark: rgb(84, 97, 107);
+$grey-light: rgb(114, 123, 131);
+$gradient-dark: #68717b;
+$gradient-light: #7e868e;
+
+$google-blue-50: #e8f0fe;
+$google-blue-600: #1a73e8;
+$google-blue-900: #174ea6;
+
+$google-red-50: #fce8e6;
+$google-red-600: #d93025;
+$google-red-900: #a50e0e;
+
+$google-grey-50: #f8f9fa;
+$google-grey-100: #f1f3f4;
+$google-grey-600: #80868b;
+$google-grey-700: #5f6368;
+
+// Breakpoints
+$screen-s: '400px';
+$screen-m: '768px';
+$screen-l: '1280px';
+$screen-xl: '1680px';
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500|Google+Sans:500|Material+Icons&subset=latin');
+@import 'sass/mixins.scss';
+@import 'sass/forms.scss';
+@import 'sass/menu.scss';
+

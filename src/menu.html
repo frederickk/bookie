@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="./index.min.css">
+  </head>
+
+  <body>
+    <div id="menu__container" class="menu__container"></div>
+
+    <div id="modal" class="modal">
+      <form action="" name="edit" class="card">
+        <div class="modal__item">
+          <input id="category" type="text" class="form__input text text--filled" name="category" placeholder="Category">
+          <!-- <label for="category">Category for link.</label> -->
+        </div>
+        <div class="modal__item">
+          <input id="display-title" type="text" class="form__input text text--filled" name="display-title" placeholder="Title">
+          <!-- <label for="display-title">Display title for link.</label> -->
+        </div>
+        <div class="modal__item">
+          <input id="url" type="text" class="form__input text text--filled" name="url" placeholder="URL">
+          <!-- <label for="url">Destination URL including "http://".</label> -->
+        </div>
+        <div>
+          <input id="id" type="hidden" value="">
+          <input id="add" type="button" class="form__input button" value="Add">
+          <input id="cancel" type="button" class="form__input button button--text" value="Cancel">
+        </div>
+      </form>
+    </div>
+
+
+    <script src="./index.min.js"></script>
+
+  </body>
+</html>

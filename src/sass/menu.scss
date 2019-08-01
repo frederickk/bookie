@@ -1,0 +1,166 @@
+body,
+html {
+  font-family: -apple-system, 'Helvetica Neue', 'Lucida Grande', sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 16px;
+  margin: 0 0 .5em 0;
+  padding: 0;
+  // min-height: 310px;
+  min-width: 310px;
+}
+
+a {
+  &:link,
+  &:visited,
+  &:active {
+    color: $google-blue-600;
+    outline: none;
+    text-decoration: none;
+    transition: background-color 100ms ease-in-out, color 100ms ease-in-out;
+  }
+
+  &:hover {
+    background-color: $google-blue-50;
+    color: $google-blue-900;
+  }
+}
+
+ul {
+  list-style: none;
+  width: 100%;
+}
+
+.menu__container {
+  margin: 0;
+  padding: 3px 0;
+
+  .menu__divider {
+    margin: 9px 0 4.5px;
+    padding: 6px 0 0;
+
+    &:not(:first-child) {
+      border: 0;
+      border-top: 1px solid rgba($black, .15);
+    }
+  }
+
+  .menu__header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 22px;
+
+    &:hover .menu__edit-container {
+      opacity: 1;
+    }
+
+    div {
+      flex-grow: 1;
+    }      
+  }
+
+  .menu__title {
+    color: rgba($black, .4);
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    padding: .5em 0;
+    text-transform: uppercase;
+  } 
+
+  .menu__header,
+  .menu__item {
+    user-select: none;
+  }
+
+  .menu__item {
+    // background: linear-gradient(to bottom, $white, $white);
+    cursor: pointer;
+    margin: 4.5px 0;
+    padding: 3px 22px;
+    transition: background 100ms ease-in-out;
+
+    &:hover {
+      background: linear-gradient(to bottom, $gradient-light 0%, $gradient-dark 100%);
+      border-bottom: 1px solid $grey-dark;
+      border-top: 1px solid $grey-light;
+      color: $white;
+      padding: 2px 44px 2px 22px;
+      text-shadow: 0px 1px $black;
+    }
+
+    &:active {
+      background: linear-gradient(to bottom, $gradient-dark 0%, $gradient-light 100%);
+      border-bottom: 1px solid $grey-light;
+      border-top: 1px solid $grey-dark;
+    }
+
+    .menu__checkbox {
+      display: none;
+      opacity: 0;
+      transition: opacity 100ms ease-in-out;
+      vertical-align: middle;
+
+      &--visible {
+        display: inline-block;
+        height: auto;
+        // opacity: 1;
+        width: auto;
+      }
+    }
+  }
+
+  .menu__edit-container {
+    opacity: 0;
+    text-align: right;
+    transition: opacity 100ms ease-in-out;
+
+    .menu__edit,
+    .menu__add {
+      border-radius: 50%;
+      font-size: 13px;
+      padding: .5em;
+    }
+  }
+}
+
+
+.card {
+  align-items: stretch;
+  background: $white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px 0 rgba($black, .4);
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 108px); // TODO: (frederickk) Fix to not use calc().
+  justify-content: space-between;
+  margin: 36px;
+  padding: 18px;
+}
+
+
+.modal {
+  @include mq-min($screen-s) {
+  }
+
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transition: opacity 100ms ease-in-out;
+  width: 100%;
+
+  &--active {
+    background-color: rgba($black, .4);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal__item {
+    display: flex;
+    flex-direction: column;
+  }
+}

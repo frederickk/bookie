@@ -1,0 +1,39 @@
+// Mixins: Media Query
+@mixin mq($bp-size, $dimension: min-width, $orientation: 'none') {
+  @if $orientation == 'none' {
+    @media only screen and ($dimension: $bp-size) {
+      @content;
+    }
+  } @else {
+    @media only screen and ($dimension: $bp-size) and (orientation: $orientation) {
+      @content;
+    }
+  }
+}
+
+// Media query min-width mixin
+@mixin mq-min($bp-size, $dimension: min-width, $orientation: 'none') {
+  @include mq($bp-size, $dimension, $orientation) {
+    @content;
+  }
+}
+
+// Media query max-width/height mixin
+@mixin mq-max($bp-size, $dimension: max-width, $orientation: 'none') {
+  @include mq($bp-size, $dimension, $orientation) {
+    @content;
+  }
+}
+
+// Media query min-width and max-width mixin
+@mixin mq-min-max($bp-min-size, $bp-max-size, $orientation: 'none') {
+  @if $orientation == 'none' {
+    @media all and (min-width: $bp-min-size) and (max-width: $bp-max-size) {
+      @content;
+    }
+  } @else {
+    @media all and (min-width: $bp-min-size) and (max-width: $bp-max-size) and (orientation: $orientation) {
+      @content;
+    }
+  }
+}
