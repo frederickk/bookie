@@ -1,5 +1,5 @@
 @mixin remove-line($color, $x: 0, $y: .5em) {
-  box-shadow: 
+  box-shadow:
     $y ($x + -2px) 0 $color,
     $y ($x + -4px) 0 $color,
     $y ($x + -6px) 0 $color,
@@ -13,10 +13,18 @@
   font-weight: 500;
 
   &::placeholder {
+    @include dark-theme() {
+      color: $google-blue-300;
+    }
+
     font-size: 12px;
   }
 
   & + label {
+    @include dark-theme() {
+      color: $google-grey-200;
+    }
+
     @include mq-min($screen-s) {
       padding: 4px 16px 0;
     }
@@ -32,8 +40,14 @@
 
 
   &.button {
+    @include dark-theme() {
+      background-color: $google-grey-900;
+      border: 1px solid $google-grey-700;
+      color: $google-blue-300;
+    }
+
     background-color: $white;
-    border: 1px solid $google-blue-600;
+    border: 1px solid $google-grey-300;
     border-radius: 4px;
     color: $google-blue-600;
     cursor: pointer;
@@ -45,20 +59,29 @@
     &:first-child {
       margin-left: 0;
     }
-  
+
     &:hover {
+      @include dark-theme() {
+        background-color: $google-blue-300;
+        color: $google-grey-900;
+      }
+
       background-color: $google-blue-50;
       color: $google-blue-900;
     }
 
     &--text {
       border: 0;
-      padding: 0 8px;
+      // padding: 0 8px;
     }
   }
 
 
   &.text {
+    @include dark-theme() {
+      color: $google-grey-200;
+    }
+
     @include mq-min($screen-s) {
       height: 56px;
       padding: 0 16px;
@@ -72,6 +95,10 @@
 
     &:active,
     &:focus {
+      @include dark-theme() {
+        border-color: $google-blue-300;
+      }
+
       border-color: $google-blue-600;
       border-width: 2px;
     }
@@ -81,6 +108,11 @@
     }
 
     &--filled {
+      @include dark-theme() {
+        background-color: rgba($google-blue-300, .24);
+        border-bottom: 1px solid $google-blue-300;
+      }
+
       background-color: $google-grey-100;
       border: 0;
       border-bottom: 1px solid $google-blue-600;
@@ -88,11 +120,22 @@
     }
 
     &--outline {
+      @include dark-theme() {
+        background-color: $google-grey-900;
+        border: 1px solid $google-blue-300;
+      }
+
       background-color: $white;
       border: 1px solid $google-blue-600;
     }
 
     &--error {
+      @include dark-theme() {
+        background-color: $google-red-300;
+        border-color: $google-red-900;
+        color: $google-red-900;
+      }
+
       background-color: $google-red-50;
       border-color: $google-red-600;
       color: $google-red-600;
@@ -106,7 +149,7 @@
     opacity: 0;
     position: absolute;
     // width: auto;
-    
+
     & + label {
       cursor: pointer;
       padding: 0;
@@ -125,7 +168,7 @@
       vertical-align: middle;
       width: 1em;
     }
-    
+
     & + label:after {
       content: '';
       position: absolute;
@@ -138,7 +181,7 @@
     &:checked + label:before {
       background-color: $google-blue-900;
     }
-    
+
     &:disabled + label {
       color: $white;
       cursor: auto;
@@ -154,7 +197,7 @@
         border: 2px solid $google-red-600;
         border-radius: 50%;
       }
-      
+
       & + label:after {
         @include remove-line($google-red-600, -.25px);
         height: 2px;
@@ -163,28 +206,28 @@
         transform: rotate(90deg);
         width: 2px;
       }
-  
+
       &:hover + label:before {
         border: 2px solid $google-red-900;
         background-color: $google-red-900;
       }
-  
+
       &:hover + label:after {
         @include remove-line($white, -.25px);
       }
-  
+
       // &:focus + label:before {
-      //   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+      //   box-shadow: 0 0 0 3px rgba($black, .12);
       // }
-  
+
       &:checked + label:before {
         border: 2px solid $google-red-900;
         background-color: $google-red-900;
       }
-      
+
       &:checked + label:after {
         @include remove-line($white, -.25px);
-      }      
+      }
     }
   }
 }

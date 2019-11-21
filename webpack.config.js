@@ -24,6 +24,9 @@ const config = {
       path.join(__dirname, './src/index.js'),
       path.join(__dirname, './src/index.scss'),
     ],
+    notes: [
+      path.join(__dirname, './src/js/notes.js'),
+    ],
   },
 
   resolve: {

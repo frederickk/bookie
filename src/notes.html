@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="./index.min.css">
+  </head>
+
+  <body class="notes__body">
+    <div id="notes__container" class="notes__container">
+      <div class="notes__save-container notes__content--hidden">
+        <form action="" name="save">
+          <input id="save" type="button" class="form__input button button--text" value="Save">
+          <input id="export" type="button" class="form__input button button--text" value="Export Markdown">
+        </form>
+      </div>
+      <div class="notes__item" data-bookmark-id="">
+        <div class="notes__title">
+          <select class="notes__title-select"></select>
+        </div>
+        <textarea class="notes__content notes__content-markdown notes__content--hidden" placeholder=""></textarea>
+        <div class="notes__content notes__content-html">
+          <span class="notes__content-placeholder">&nbsp;</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="./notes.min.js"></script>
+
+  </body>
+</html>

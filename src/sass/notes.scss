@@ -1,0 +1,281 @@
+@import url('https://fonts.sandbox.google.com/css?family=Google+Sans+Text+Beta+v2020:400,500');
+
+$notes-font-size: 18px;
+$notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
+
+
+@mixin code() {
+  code {
+    @include dark-theme() {
+      background-color: rgba($google-yellow-50, .2);
+    }
+
+    background-color: $google-yellow-100;
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    padding: 1em;
+    white-space: pre-wrap;
+  }
+}
+
+
+
+.notes__body,
+.notes__container {
+  @include dark-theme() {
+    color: $google-yellow-50;
+    background-color: $google-grey-900;
+  }
+
+  background-color: $google-yellow-50;
+  color: $google-grey-900;
+  font-family: $notes-font-family;
+  font-size: $notes-font-size;
+  letter-spacing: .01em;
+}
+
+.notes__container {
+  margin: 0;
+  padding: 3px 0;
+
+  .notes__save-container {
+    background-color: $white;
+    box-sizing: border-box;
+    bottom: 0;
+    padding: 12px 22px;
+    position: fixed;
+    text-align: right;
+    transition: bottom 100ms ease-in-out;
+    width: 100%;
+    z-index: 1000;
+
+    &.notes__content--hidden {
+      bottom: -72px;
+      display: block;
+    }
+  }
+
+  .notes__item {
+    @include mq-min($screen-m) {
+      min-height: 100vh;
+      max-width: 70ch;
+    }
+
+    margin: auto;
+    padding: 3px 22px;
+  }
+
+  .notes__title {
+    @include dark-theme() {
+      // color: $google-yellow-300;
+      // border-bottom: 1px solid $google-yellow-300;
+      color: $google-yellow-50;
+      border-bottom: 1px solid $google-yellow-300;
+    }
+
+    // border-bottom: 1px solid $google-yellow-900;
+    border-bottom: 1px solid $google-grey-700;
+    // color: $google-yellow-900;
+    color: $google-grey-900;
+    font-size: 9px;
+    font-weight: 600;
+    height: 2rem;
+    letter-spacing: .1em;
+    padding: .5em 0;
+    text-transform: uppercase;
+  }
+
+  .notes__title-select {
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    font-family: 'Google Sans', $notes-font-family;
+    border-radius: 0;
+    text-indent: 0;
+    box-sizing: border-box;
+    overflow: visible;
+    appearance: none;
+    padding: .5em 0;
+
+    option {
+      text-transform: uppercase;
+    }
+  }
+
+  .notes__content {
+    @include dark-theme() {
+      color: $google-yellow-50;
+    }
+
+    color: $google-grey-900;
+    padding-bottom: 3rem;
+
+    &-markdown {
+      background-color: transparent;
+      border: 0;
+      cursor: text;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 400;
+      min-height: calc(100vh - 15rem);
+      margin-bottom: 72px;
+      padding: 1em 0;
+      resize: none;
+      transition: padding 50ms ease-in-out;
+      white-space: pre-line;
+      width: 100%;
+
+      &:focus {
+        padding: 1em 1em;
+      }
+    }
+
+    &-html {
+      height: 100%;
+
+      a {
+        &:link,
+        &:visited,
+        &:active {
+          @include dark-theme() {
+            color: $google-blue-300;
+          }
+
+          color: $google-blue-600;
+        }
+
+        &:hover {
+          background-color: transparent;
+          color: $google-blue-900;
+        }
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: 'Google Sans', $notes-font-family;
+        font-size: $notes-font-size;
+        // font-variant: small-caps;
+        font-weight: 500;
+        margin: 2rem 0 0;
+        // text-transform: lowercase;
+      }
+
+      h4,
+      h5,
+      h6,
+      p {
+        @include code();
+
+        font-size: $notes-font-size;
+        font-weight: 400;
+        margin: 2rem 0 0;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+          & + p,
+        & + span, {
+          color: $google-grey-700;
+          margin-top: .5rem;
+        }
+      }
+
+      hr {
+        @include dark-theme() {
+          border-color: $google-yellow-300;
+        }
+
+        border-top: 1px dotted $google-grey-700;
+        border-bottom: 0;
+        margin: 3rem 0;
+      }
+
+      img {
+        @include dark-theme() {
+          mix-blend-mode: soft-light;
+        }
+
+        width: 100%;
+        filter: grayscale(1);
+        mix-blend-mode: multiply;
+        transition: filter 100ms ease-in-out;
+
+        &:hover {
+          filter: grayscale(0);
+          mix-blend-mode: normal;
+        }
+      }
+
+      mark {
+        @include dark-theme() {
+          background-color: rgba($google-yellow-100, .3);
+          color: $google-yellow-50;
+        }
+
+        background-color: $google-yellow-300;
+      }
+
+      pre {
+        @include code();
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        max-width: 100%;
+        margin-bottom: 2rem;
+        width: 100%;
+
+        tbody > tr:nth-child(odd) > td,
+        tbody > tr:nth-child(odd) > th {
+          @include dark-theme() {
+            background-color: rgba($google-yellow-50, .2);
+          }
+
+          background-color: $google-yellow-100;
+        }
+
+        thead > tr > th,
+        tbody > tr > th,
+        tfoot > tr > th,
+        thead > tr > td,
+        tbody > tr > td,
+        tfoot > tr > td {
+          padding: 1rem;
+          vertical-align: top;
+          border-top: 1px solid $google-grey-900;
+        }
+      }
+
+      ul {
+        box-sizing: border-box;
+        list-style: initial;
+
+        // TODO (frederickk): Find another way and avoid "!important".
+        & > li {
+          margin: 0 0 1rem !important;
+        }
+
+        :not(li) > li {
+          margin: 0 !important;
+        }
+
+        li,
+        p {
+          margin: 0;
+          line-height: 2.5rem;
+        }
+      }
+
+    }
+
+    &--hidden {
+      display: none;
+    }
+  }
+}

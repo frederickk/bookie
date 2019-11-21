@@ -20,11 +20,20 @@ class Menu {
     this.addItems_;
 
     /** @private */
+    this.noteItems_;
+
+    /** @private */
+    this.organizeItems_;
+
+    /** @private */
     this.bookmarkFolderId_;
 
     this.init_();
   }
 
+  /**
+   * @private
+   */
   init_() {
     bookmarks.search({
       'title': 'Bookie'
@@ -53,7 +62,7 @@ class Menu {
     bookmarks.get(this.bookmarkFolderId_, (items) => {
       items.forEach((entries) => {
         entries.children.forEach((entryList) => {
-          this.append_(entryList.title, entryList.children);
+          this.append_(entryList.title, entryList.children, entryList.id);
         });
       });
 
@@ -64,15 +73,18 @@ class Menu {
 
   /**
    * @private
-   * @param {Array} entries 
+   * @param {String} title
+   * @param {Array} entries
+   * @param {String} bookmarkId
    */
-  append_(category, entries) {
+  append_(category, entries, bookmarkId) {
     entries.forEach((item) => {
       dashboard.addEntry(
         this.menu_,
         category,
         item.title,
-        item.url
+        item.url,
+        bookmarkId
       );
     });
   }
@@ -85,6 +97,8 @@ class Menu {
     this.menuItems_ = document.querySelectorAll('.menu__item');
     this.editItems_ = document.querySelectorAll('.menu__edit');
     this.addItems_ = document.querySelectorAll('.menu__add');
+    this.noteItems_ = document.querySelectorAll('.menu__note');
+    this.organizeItems_ = document.querySelectorAll('.menu__organize');
 
     this.menuItems_.forEach((item) => {
       item.addEventListener('click', () => {
@@ -101,6 +115,18 @@ class Menu {
     this.addItems_.forEach((item) => {
       item.addEventListener('click', (event) => {
         this.addClickHandler_(item);
+      });
+    });
+
+    this.noteItems_.forEach((item) => {
+      item.addEventListener('click', (event) => {
+        this.noteClickHandler_(item);
+      });
+    });
+
+    this.organizeItems_.forEach((item) => {
+      item.addEventListener('click', (event) => {
+        this.organizeClickHandler_(item);
       });
     });
 
@@ -154,15 +180,54 @@ class Menu {
   /** @private */
   addClickHandler_(item) {
     const categoryInput = document.querySelector('#category');
+    const displayTitleInput = document.querySelector('#display-title');
+    const urlInput = document.querySelector('#url');
+
     categoryInput.value = item.parentNode.parentNode
       .querySelector('.menu__title').textContent.trim();
+
+    chrome.tabs.query({
+      currentWindow: true,
+      active: true
+    }, (tabs) => {
+      displayTitleInput.value = tabs[0].title;
+      urlInput.value = tabs[0].url;
+    });
 
     document.querySelector('#modal').classList.toggle('modal--active');
     event.stopPropagation();
 
     return;
   }
-  
+
+  /** @private */
+  noteClickHandler_(item) {
+    const bookmarkId = item.dataset.bookmarkId;
+
+    chrome.tabs.create({
+      url: `notes.html?bookmarkId=${bookmarkId}`,
+      active: true,
+    });
+
+    event.stopPropagation();
+
+    return;
+  }
+
+  /** @private */
+  organizeClickHandler_(item) {
+    const bookmarkId = item.dataset.bookmarkId;
+
+    chrome.tabs.create({
+      url: `chrome://bookmarks/?id=${bookmarkId}`,
+      active: true,
+    });
+
+    event.stopPropagation();
+
+    return;
+  }
+
 }
 
 

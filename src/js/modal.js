@@ -30,7 +30,7 @@ class Modal {
     this.attach_();
   }
 
-  /** 
+  /**
    * Clears form inputs.
    * @private
    */
@@ -42,7 +42,7 @@ class Modal {
 
   /**
    * Creates bookmark entry.
-   * @param {String} id 
+   * @param {String} id
    * @param {String} title
    * @param {String} url
    */
@@ -51,7 +51,7 @@ class Modal {
       'parentId': id,
       'title': title,
       'url': url,
-    });        
+    });
 
     // storage.set(entryId, {
     //   'category': this.category_.value,
@@ -75,7 +75,7 @@ class Modal {
       event.preventDefault();
       if (event.keyCode === 13) {
         this.buttonAdd_.click();
-      }    
+      }
     });
 
     this.buttonCancel_.addEventListener('click', () => {
@@ -89,6 +89,7 @@ class Modal {
     document.querySelector('.modal .card').addEventListener(
       'click', (event) => {
       event.stopPropagation();
+
       return;
     });
   }
@@ -127,10 +128,10 @@ class Modal {
       } else {
         this.createBookmarkEntry_(entries[0].id, title, url);
       }
-    });  
+    });
 
     // dashboard.addEntry(
-    //   this.menu_, 
+    //   this.menu_,
     //   category,
     //   title,
     //   url

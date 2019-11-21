@@ -1,22 +1,32 @@
 $white: #fff;
-$black: rgb(32, 33, 36);
-$grey-dark: rgb(84, 97, 107);
-$grey-light: rgb(114, 123, 131);
-$gradient-dark: #68717b;
-$gradient-light: #7e868e;
+$black: #000;
+$os-blue: #2257d1;
 
 $google-blue-50: #e8f0fe;
+$google-blue-300: #8AB4F8;
+$google-blue-500: #4285f4;
 $google-blue-600: #1a73e8;
 $google-blue-900: #174ea6;
 
 $google-red-50: #fce8e6;
+$google-red-300: #F28B82;
 $google-red-600: #d93025;
 $google-red-900: #a50e0e;
 
+$google-yellow-50: #FEF7E0;
+$google-yellow-100: #FEEFC3;
+$google-yellow-300: #FDD663;
+$google-yellow-500: #FBBC04;
+$google-yellow-900: #E37400;
+
 $google-grey-50: #f8f9fa;
 $google-grey-100: #f1f3f4;
+$google-grey-200: #E8EAED;
+$google-grey-300: #DADCE0;
+$google-grey-500: #9AA0A6;
 $google-grey-600: #80868b;
-$google-grey-700: #5f6368;
+$google-grey-700: #5F6368;
+$google-grey-900: #202124;
 
 // Breakpoints
 $screen-s: '400px';
@@ -24,8 +34,56 @@ $screen-m: '768px';
 $screen-l: '1280px';
 $screen-xl: '1680px';
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500|Google+Sans:500|Material+Icons&subset=latin');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500|Google+Sans:500|Material+Icons|Roboto+Mono:400&subset=latin');
 @import 'sass/mixins.scss';
 @import 'sass/forms.scss';
 @import 'sass/menu.scss';
+@import 'sass/notes.scss';
 
+
+body,
+html {
+  @include dark-theme() {
+    background-color: $google-grey-900;
+    color: $google-grey-200;
+  }
+
+  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, 'Helvetica Neue', 'Lucida Grande', sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 16px;
+  margin: 0 0 .5em 0;
+  padding: 0;
+  min-width: 310px;
+}
+
+a {
+  &:link,
+  &:visited,
+  &:active {
+    @include dark-theme() {
+      color: $google-blue-300;
+    }
+
+    color: $google-blue-600;
+    outline: none;
+    text-decoration: none;
+    transition: background-color 100ms ease-in-out, color 100ms ease-in-out;
+  }
+
+  &:hover {
+    @include dark-theme() {
+      background-color: $google-blue-300;
+      color: $google-grey-900;
+    }
+
+    background-color: $google-blue-50;
+    color: $google-blue-900;
+  }
+}
+
+ul {
+  list-style: none;
+  width: 100%;
+}

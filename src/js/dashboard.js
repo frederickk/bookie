@@ -3,21 +3,22 @@ const {slugify} = require('utils');
 
 class Dashboard {
   /**
-   * Creates category and header DOM elements. 
+   * Creates category and header DOM elements.
+   * @param {String} bookmarkId  numberic ID of bookmark folder
+   * @param {String} categoryId  ID for category title header.
    * @param {String} title
-   * @param {String} id  ID for category title header.
    */
-  static createCategory(id, title) {
-    if (id && title) {
+  static createCategory(bookmarkId, categoryId, title) {
+    if (categoryId && title) {
       const menuTitle = document.createElement('li');
-      menuTitle.id = id;
+      menuTitle.id = categoryId;
       menuTitle.className = 'menu__title';
       menuTitle.innerText = title;
-      
+
       const menuHeader = document.createElement('li');
       menuHeader.className = 'menu__header';
       menuHeader.appendChild(menuTitle);
-      menuHeader.appendChild(Dashboard.createEditTools());
+      menuHeader.appendChild(Dashboard.createEditTools(bookmarkId));
 
       const menuContainer = document.createElement('ul');
       menuContainer.className = 'menu__divider';
@@ -32,25 +33,44 @@ class Dashboard {
 
   /**
    * Creates user category edit tools DOM elements.
+   * @param {String} bookmarkId  numberic ID of bookmark folder
    */
-  static createEditTools() {
-    const edit = document.createElement('a');
-    edit.className = 'menu__edit material-icons';
-    edit.innerText = 'edit';
-
+  static createEditTools(bookmarkId) {
     const add = document.createElement('a');
     add.className = 'menu__add material-icons';
     add.innerText = 'add';
+    add.title = 'Add item to group';
+    add.dataset.bookmarkId = bookmarkId;
+
+    const edit = document.createElement('a');
+    edit.className = 'menu__edit material-icons';
+    edit.innerText = 'edit';
+    edit.title = 'Remove item from group';
+    edit.dataset.bookmarkId = bookmarkId;
+
+    const note = document.createElement('a');
+    note.className = 'menu__note material-icons';
+    note.innerText = 'receipt'; //'library_books';
+    note.title = 'Add/edit notes';
+    note.dataset.bookmarkId = bookmarkId;
+
+    const organize = document.createElement('a');
+    organize.className = 'menu__organize material-icons';
+    organize.innerText = 'bookmark';
+    organize.title = 'Organize within Chrome bookmarks';
+    organize.dataset.bookmarkId = bookmarkId;
 
     const container = document.createElement('div');
     container.className = 'menu__edit-container';
-    container.appendChild(edit);
     container.appendChild(add);
+    container.appendChild(edit);
+    container.appendChild(note);
+    container.appendChild(organize);
 
     return container;
   }
 
-  /** 
+  /**
    * Creates dashboard item DOM elements.
    * @param {String} id  ID for checkbox entry.
    */
@@ -77,11 +97,12 @@ class Dashboard {
   /**
    * Adds entry to DOM
    * @param {HTMLElement} parent.
-   * @param {String} category 
-   * @param {String} title 
-   * @param {String} url 
+   * @param {String} category
+   * @param {String} title
+   * @param {String} url
+   * @param {String} bookmarkId
    */
-  static addEntry(parent, category, title, url) {
+  static addEntry(parent, category, title, url, bookmarkId) {
     const categoryId = slugify(category);
     const menuTitle = document.querySelector(`#${categoryId}`);
     let menuContainer;
@@ -89,7 +110,7 @@ class Dashboard {
     if (menuTitle) {
       menuContainer = menuTitle.parentElement.parentElement;
     } else {
-      menuContainer = Dashboard.createCategory(categoryId, category);
+      menuContainer = Dashboard.createCategory(bookmarkId, categoryId, category);
       parent.appendChild(menuContainer);
     }
 

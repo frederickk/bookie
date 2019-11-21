@@ -1,7 +1,7 @@
 module.exports = {
   /**
    * Removes given element from the DOM.
-   * @param {HTMLElement} item 
+   * @param {HTMLElement} item
    */
   removeElement: (item) => {
     item.parentNode.removeChild(item);
@@ -38,7 +38,7 @@ module.exports = {
   /**
    * Slugifies a given string.
    * @url https://gist.github.com/mathewbyrne/1280286
-   * @param {String} text 
+   * @param {String} text
    * @returns Slugified string.
    */
   slugify: (text) => {
@@ -53,7 +53,7 @@ module.exports = {
   /**
    * Checks if given string is a valid URL.
    * @url https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
-   * @param {String} str 
+   * @param {String} str
    * @return True if valid, false otherwise.
    */
   checkValidURL: (str) => {
@@ -83,6 +83,51 @@ module.exports = {
       element.classList.remove(errCls);
 
       return false;
+    }
+  },
+
+  /**
+   * Retrieve value from URL params.
+   * @return  {Object}
+   */
+  getUrlParams: () => {
+    let vars = {};
+    const parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+      (m, key, value) => {
+        vars[key] = value;
+      }
+    );
+
+    return vars;
+  },
+
+  /**
+   * [download_ description]
+   * @param   {[type]}  data      [data description]
+   * @param   {[type]}  filename  [filename description]
+   * @param   {[type]}  mimetype  [type description]
+   * @return  {[type]}            [return description]
+   */
+  download: (data, filename, mimetype) => {
+    const file = new Blob([data], {
+      type: mimetype,
+    });
+
+    if (window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(file, filename);
+    } else {
+      const a = document.createElement('a');
+      const url = URL.createObjectURL(file);
+
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+
+      window.setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 0);
     }
   },
 

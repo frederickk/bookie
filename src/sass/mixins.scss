@@ -37,3 +37,10 @@
     }
   }
 }
+
+// Media query prefers-color-scheme
+@mixin dark-theme() {
+  @media (prefers-color-scheme: dark) {
+      @content
+  }
+}

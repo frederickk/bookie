@@ -7,8 +7,8 @@
 class Storage {
   /**
    * Saves a value in Chrome Storage identified key.
-   * @param {String} key 
-   * @param {Object} obj 
+   * @param {String} key
+   * @param {Object} obj
    */
   static set(key, obj) {
     if (!key || !obj) {
@@ -20,8 +20,8 @@ class Storage {
       chrome.storage.sync.set({
         [key]: obj
       }, () => {
-        console.log(`${key} with ${obj} value saved`);
-      });    
+        // console.log(`${key} with ${obj} value saved`);
+      });
     } catch(err) {
       window.localStorage.setItem(key, JSON.stringify(obj));
     }
@@ -29,15 +29,15 @@ class Storage {
 
   /**
    * Retrieves a value from Chrome Storage based on key.
-   * @param {String} key 
+   * @param {String} key
    */
   static get(key, callback = () => {}) {
     try {
       return chrome.storage.sync.get([key], (result) => {
-        console.log(`Value currently is ${result[key]}`);
+        // console.log(`Value currently is ${result[key]}`);
         callback(result[key]);
         return result[key];
-      });    
+      });
     } catch(err) {
       return JSON.parse(window.localStorage.getItem(key));
     }
@@ -45,34 +45,34 @@ class Storage {
 
   /**
    * Retrieves all values from Chrome Storage.
-   * @param {Function} callback 
+   * @param {Function} callback
    */
   static getAll(callback) {
     try {
       return chrome.storage.sync.get(null, (result) => {
         callback(result);
         return result;
-      });    
+      });
     } catch(err) {
       let archive = [];
 
       // TODO (frederickk): Create a LocalStorage implmentation to access all.
       for (var key in localstorage) {
         console.log(key);
-      }      
+      }
       // items.forEach((key) => {
     //     archive.push({
     //       [key]: Storage.get(key),
     //     });
       // });
 
-      return archive;      
+      return archive;
     }
   }
 
   /**
    * Removes a value from Chrome Storage based on key.
-   * @param {String} key 
+   * @param {String} key
    */
   static remove(key) {
     try {
@@ -80,7 +80,7 @@ class Storage {
         console.log(`${key} removed`);
       });
     } catch(err) {
-      window.localStorage.removeItem(key);      
+      window.localStorage.removeItem(key);
     }
   }
 

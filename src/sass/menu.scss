@@ -1,36 +1,3 @@
-body,
-html {
-  font-family: -apple-system, 'Helvetica Neue', 'Lucida Grande', sans-serif;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 16px;
-  margin: 0 0 .5em 0;
-  padding: 0;
-  // min-height: 310px;
-  min-width: 310px;
-}
-
-a {
-  &:link,
-  &:visited,
-  &:active {
-    color: $google-blue-600;
-    outline: none;
-    text-decoration: none;
-    transition: background-color 100ms ease-in-out, color 100ms ease-in-out;
-  }
-
-  &:hover {
-    background-color: $google-blue-50;
-    color: $google-blue-900;
-  }
-}
-
-ul {
-  list-style: none;
-  width: 100%;
-}
-
 .menu__container {
   margin: 0;
   padding: 3px 0;
@@ -56,18 +23,22 @@ ul {
 
     div {
       flex-grow: 1;
-    }      
+    }
   }
 
   .menu__title {
-    color: rgba($black, .4);
+    @include dark-theme() {
+      color: $google-grey-500;
+    }
+
+    color: $google-grey-700;
     font-family: 'Google Sans', 'Roboto', sans-serif;
     font-size: 9px;
     font-weight: 600;
     letter-spacing: .1em;
     padding: .5em 0;
     text-transform: uppercase;
-  } 
+  }
 
   .menu__header,
   .menu__item {
@@ -75,25 +46,18 @@ ul {
   }
 
   .menu__item {
-    // background: linear-gradient(to bottom, $white, $white);
     cursor: pointer;
     margin: 4.5px 0;
     padding: 3px 22px;
-    transition: background 100ms ease-in-out;
+    transition: background-color 100ms ease-in-out;
 
     &:hover {
-      background: linear-gradient(to bottom, $gradient-light 0%, $gradient-dark 100%);
-      border-bottom: 1px solid $grey-dark;
-      border-top: 1px solid $grey-light;
+      background-color: $os-blue;
       color: $white;
-      padding: 2px 44px 2px 22px;
-      text-shadow: 0px 1px $black;
     }
 
     &:active {
-      background: linear-gradient(to bottom, $gradient-dark 0%, $gradient-light 100%);
-      border-bottom: 1px solid $grey-light;
-      border-top: 1px solid $grey-dark;
+      background-color: transparent;
     }
 
     .menu__checkbox {
@@ -105,7 +69,6 @@ ul {
       &--visible {
         display: inline-block;
         height: auto;
-        // opacity: 1;
         width: auto;
       }
     }
@@ -117,7 +80,9 @@ ul {
     transition: opacity 100ms ease-in-out;
 
     .menu__edit,
-    .menu__add {
+    .menu__add,
+    .menu__note,
+    .menu__organize {
       border-radius: 50%;
       font-size: 13px;
       padding: .5em;
@@ -127,16 +92,24 @@ ul {
 
 
 .card {
+  @include dark-theme() {
+    background-color: $google-grey-900;
+    box-shadow: 0 2px 4px 0 rgba($black, .6);
+    color: $google-grey-200;
+  }
+
   align-items: stretch;
   background: $white;
   border-radius: 4px;
   box-shadow: 0 2px 4px 0 rgba($black, .4);
   display: flex;
   flex-direction: column;
-  height: calc(100% - 108px); // TODO: (frederickk) Fix to not use calc().
+  height: 320px;
   justify-content: space-between;
   margin: 36px;
   padding: 18px;
+  text-align: right;
+  width: 240px;
 }
 
 
@@ -144,16 +117,23 @@ ul {
   @include mq-min($screen-s) {
   }
 
+  align-items: center;
+  display: flex;
   height: 100%;
+  justify-content: center;
   left: 0;
   opacity: 0;
   pointer-events: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   transition: opacity 100ms ease-in-out;
   width: 100%;
 
   &--active {
+    @include dark-theme() {
+      background-color: rgba($google-grey-900, .6);
+    }
+
     background-color: rgba($black, .4);
     opacity: 1;
     pointer-events: auto;
