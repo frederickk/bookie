@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Bookie</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="./index.min.css">
+  </head>
+
+  <body class="intro__body">
+    <div class="intro__container" id="notes__container">
+      <div>
+        <p>
+          <h1>
+            Bookie is a <a href="https://chrome.google.com/webstore/detail/bookie/bfjfkconjpndkfkjinlahajgnlkbdkgp" target="_blank">Chrome Extension</a> that makes a curated set of bookmarks and additional notes accessible within the Chrome menubar.
+          </h1>
+
+          <img src="./images/screenshot-00.jpg" class="intro__img" alt="Bookie menu">
+
+          <div class="intro__table">
+            <p class="intro__table--cell">
+              <img src="./images/add.png" class="intro__icon" alt="Add"><br>
+              Adds bookmarks.
+            </p>
+
+            <p class="intro__table--cell">
+              <img src="./images/edit.png" class="intro__icon" alt="Edit"><br>
+              Remove item from group.
+            </p>
+
+            <p class="intro__table--cell">
+              <img src="./images/notes.png" class="intro__icon" alt="Notes"><br>
+              Add/edit notes with Markdown.
+            </p>
+
+            <p class="intro__table--cell">
+              <img src="./images/bookmark.png" class="intro__icon" alt="Bookmark"><br>
+              Organize within <a href="chrome://bookmarks" target="_blank">Chrome bookmarks</a> native UI.
+            </p>
+          </div>
+
+          <img src="./images/screenshot-01.jpg" class="intro__img" alt="Bookie menu bar">
+
+        </p>
+
+        <p>
+          <span class="intro__title" name="bookmarks" id="bookmarks">Manage bookmarks</span>
+          Bookmarks can be added easily within the menu, and will automatically populate with info from the current tab (e.g. title and URL).
+          <img src="./images/screenshot-02.jpg" class="intro__img" alt="Bookie add menu">
+          <img src="./images/screenshot-03.jpg" class="intro__img" alt="Bookie add modal">
+
+          Removing bookmarks can also be handled inline.
+          <img src="./images/screenshot-04.jpg" class="intro__img" alt="Bookie edit menu">
+          <img src="./images/screenshot-05.jpg" class="intro__img" alt="Bookie edit interface">
+
+          The bookmarks within Bookie are simply <a href="chrome://bookmarks" target="_blank">Chrome bookmarks</a> stored in a folder called “Bookie”. You can manage the entries for Bookie within the menu itself (via edit and add options) or simply through the native Chrome bookmarks UI.
+          <img src="./images/screenshot-09.jpg" class="intro__img" alt="Bookie bookmark menu">
+          <img src="./images/screenshot-10.jpg" class="intro__img" alt="Chrome bookmarks manager">
+        </p>
+
+        <p>
+          <span class="intro__title" name="notes" id="notes">Notes</span>
+          You can also add additional notes to accompany each category, these notes are stored within local storage and are accessible by you. But they will sync across all devices when logged into Chrome.
+
+          <img src="./images/screenshot-07.jpg" class="intro__img" alt="Notes menu">
+
+          <span class="intro__sub-title" name="markdown" id="markdown">Markdown</span>
+          Formatting of notes is handled with markdown, simply clicking on the text box exposes the underlying markdown. Bookie's notes support markdown's syntax as well as some additional custom tags.
+          <img src="./images/screenshot-08.jpg" class="intro__img" alt="Notes menu">
+
+          <span class="intro__sub-title" name="markdown" id="markdown">Smart-ish copy and paste</span>
+          Copied HTML or Rich Text is automatically converted to Markdown when pasted.
+
+          Below is an example of the rich formatting available for notes, simply click on this text box to reveal the "source" markdown.
+        </p>
+      </div>
+
+      <div id="notes__container" class="notes__container">
+        <textarea class="notes__content notes__content-markdown notes__content--hidden" placeholder="">
+# Headings
+
+Yes, these are rendering correctly, Bookie's notes encourage a simpler hierarchy than other markdown renderers.
+
+
+# h1 Heading
+## h2 Heading
+### h3 Heading
+#### h4 Heading
+##### h5 Heading
+###### h6 Heading
+
+
+---
+# Emphasis
+
+**This is bold text**
+
+__This is bold text__
+
+*This is italic text*
+
+_This is italic text_
+
+~~Strikethrough~~
+
+==Marked text==
+
+++Inserted text++
+
+
+---
+# Subscript/Superscript
+
+- 19^th^
+- H~2~O
+
+
+---
+# Smart typography
+
+(c) (C) (r) (R) (tm) (TM) (p) (P) +-
+
+test.. test... test..... test?..... test!....
+
+!!!!!! ???? ,,  -- ---
+
+"Smartypants, double quotes" and 'single quotes'
+
+
+---
+# Emojis
+
+> Classic markup: :wink: :crush: :cry: :tear: :laughing: :yum:
+>
+> Shortcuts (emoticons): :-) :-( 8-) ;)
+
+
+---
+# Blockquotes
+
+> Blockquotes can also be nested...
+> > ...by using additional greater-than signs right next to each other...
+> >
+> > > ...or with spaces between arrows.
+
+
+---
+# Tables
+
+| Option | Description |
+| ------ | ----------- |
+| data   | path to data files to supply the data that will be passed into templates. |
+| engine | engine to be used for processing templates. Handlebars is the default. |
+| ext    | extension to be used for dest files. |
+
+Right aligned columns
+
+| Option | Description |
+| ------:| -----------:|
+| data   | path to data files to supply the data that will be passed into templates. |
+| engine | engine to be used for processing templates. Handlebars is the default. |
+| ext    | extension to be used for dest files. |
+
+
+---
+# Lists
+
+Unordered
+
++ Create a list by starting a line with `+`, `-`, or `*`
++ Sub-lists are made by indenting 2 spaces:
+  - Marker character change forces new list start:
+    * Ac tristique libero volutpat at
+    + Facilisis in pretium nisl aliquet
+    - Nulla volutpat aliquam velit
++ Very easy!
+
+Ordered
+
+1. Lorem ipsum dolor sit amet
+2. Consectetur adipiscing elit
+3. Integer molestie lorem at massa
+
+
+1. You can use sequential numbers...
+1. ...or keep all the numbers as `1.`
+
+Start numbering with offset:
+
+57. foo
+1. bar
+
+
+---
+# Definition lists
+
+Term 1
+
+:   Definition 1
+with lazy continuation.
+
+Term 2 with *inline markup*
+
+:   Definition 2
+
+        { some code, part of Definition 2 }
+
+    Third paragraph of definition 2.
+
+_Compact style:_
+
+Term 1
+  ~ Definition 1
+
+Term 2
+  ~ Definition 2a
+  ~ Definition 2b
+
+
+---
+# Footnotes
+
+Footnote 1 link[^first].
+
+Footnote 2 link[^second].
+
+Inline footnote^[Text of inline footnote] definition.
+
+Duplicated footnote reference[^second].
+
+[^first]: Footnotes **can include markup**
+
+    and multiple paragraphs.
+
+[^second]: Footnote text.
+
+
+---
+# Links
+
+[link text](http://dev.nodeca.com)
+
+[link with title](http://nodeca.github.io/pica/demo/ "title text!")
+
+
+---
+# Images
+
+![Eibsee, Grainau, Germany](https://images.unsplash.com/photo-1472156871248-64f7fb851012?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2156&q=80)
+
+![Marienplatz, München, Germany](https://images.unsplash.com/photo-1465479499730-d2c36f03ef87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80)
+
+Like links, Images also have a footnote style syntax
+
+![Alt text][id]
+
+With a reference later in the document defining the URL location:
+
+[id]: https://images.unsplash.com/photo-1544267822-2d9ac57fc38b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80  "Munich"
+
+
+---
+# Markers
+
+::: doc denote a [Google doc](https://docs.google.com/)
+
+
+::: docs denote a [Google doc](https://docs.google.com/)
+
+
+::: file denote a [generic Drive file](https://drive.google.com/)
+
+
+::: film denote a [film](https://youtube.com/)
+
+
+::: image denote a [image](https://photos.google.com/)
+
+
+::: pdf denote a [PDF](https://get.adobe.com/us/reader/)
+
+
+::: slide denote a [Google slides doc](https://slides.google.com/)
+
+
+::: slides denote a [Google slides doc](https://slides.google.com/)
+
+
+::: sketch denote a [Sketch file](https://sketch.com/)
+
+
+::: sheet denote a [Google sheets doc](https://sheets.google.com/)
+
+
+::: sheets denote a [Google sheets doc](https://sheets.google.com/)
+
+
+::: video denote a [film](https://youtube.com/)
+
+
+::: zip denote a [generic archive file](https://drive.google.com/)
+
+
+---
+# Inline `code`
+
+Indented code
+
+    // Some comments
+    line 1 of code
+    line 2 of code
+    line 3 of code
+
+
+Block code "fences"
+
+``` js
+let foo = (bar) => {
+  return bar;
+};
+
+console.log(foo(5));
+```
+        </textarea>
+        <div class="notes__content notes__content-html">
+          <span class="notes__content-placeholder">&nbsp;</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="./notes.min.js"></script>
+
+  </body>
+</html>

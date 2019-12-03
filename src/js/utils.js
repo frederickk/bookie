@@ -43,11 +43,11 @@ module.exports = {
    */
   slugify: (text) => {
     return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w\-]+/g, '')
-    .replace(/\-\-+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '');
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
   },
 
   /**
@@ -62,7 +62,7 @@ module.exports = {
       '((\\d{1,3}\\.){3}\\d{1,3}))'+
       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+
       '(\\?[;&a-z\\d%_.~+=-]*)?'+
-      '(\\#[-a-z\\d_]*)?$','i');
+      '(\\#[-a-z\\d_]*)?$', 'i');
 
     return !!pattern.test(str);
   },
@@ -91,11 +91,11 @@ module.exports = {
    * @return  {Object}
    */
   getUrlParams: () => {
-    let vars = {};
-    const parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-      (m, key, value) => {
-        vars[key] = value;
-      }
+    const vars = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+        (m, key, value) => {
+          vars[key] = value;
+        }
     );
 
     return vars;
@@ -129,6 +129,20 @@ module.exports = {
         window.URL.revokeObjectURL(url);
       }, 0);
     }
+  },
+
+  /**
+   *
+   */
+  stringToArrayBuffer: (string) => {
+    const buffer = new ArrayBuffer(string.length);
+    const bufferView = new Uint8Array(buffer);
+
+    for (let i = 0; i < string.length; i++) {
+      bufferView[i] = string.charCodeAt(i);
+    }
+
+    return buffer;
   },
 
 };

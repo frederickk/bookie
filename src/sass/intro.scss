@@ -1,0 +1,93 @@
+.intro__body,
+.intro__container {
+  @include dark-theme() {
+    color: $white;
+    background-color: $google-grey-900;
+  }
+
+  box-sizing: border-box;
+  background-color: $white;
+  color: $google-grey-900;
+  font-family: $notes-font-family;
+  font-size: $notes-font-size;
+  font-weight: 400;
+  letter-spacing: .01em;
+  line-height: $notes-line-height;
+  padding-bottom: 4em;
+}
+
+.intro__container {
+  // margin: auto;
+  // max-width: 70ch;
+  // padding: 3px 0;
+  margin: 0;
+  padding: 3px 25vw;
+
+  h1,
+  h2,
+  h3 {
+    font-size: $notes-font-size;
+    font-weight: 500;
+    line-height: $notes-line-height;
+    margin: 2rem 0 0;
+  }
+
+  img,
+  .intro__img,
+  p {
+    clear: both;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  img,
+  .intro__img {
+    padding-bottom: 1em;
+    padding-top: 1em;
+
+    &--left  {
+      float: left;
+      width: 50%;
+    }
+  }
+
+  .intro__icon {
+    box-sizing: initial;
+    display: inline-block;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 16px;
+  }
+
+  .intro__table {
+    display: block;
+    width: 100%;
+
+    &--cell {
+      clear: none;
+      color: $google-grey-700;
+      float: left;
+      padding-right: 1em;
+      width: 25%;
+    }
+  }
+
+  .intro__title,
+  .intro__sub-title {
+    display: block;
+    margin-top: 4em;
+  }
+
+  .intro__title {
+    @include dark-theme() {
+      border-bottom: 1px solid $white;
+    }
+
+    border-top: 1px solid $google-grey-700;
+    font-weight: 500;
+  }
+
+
+}

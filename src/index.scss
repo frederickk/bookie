@@ -3,29 +3,29 @@ $black: #000;
 $os-blue: #2257d1;
 
 $google-blue-50: #e8f0fe;
-$google-blue-300: #8AB4F8;
+$google-blue-300: #8ab4f8;
 $google-blue-500: #4285f4;
 $google-blue-600: #1a73e8;
 $google-blue-900: #174ea6;
 
 $google-red-50: #fce8e6;
-$google-red-300: #F28B82;
+$google-red-300: #f28b82;
 $google-red-600: #d93025;
 $google-red-900: #a50e0e;
 
-$google-yellow-50: #FEF7E0;
-$google-yellow-100: #FEEFC3;
-$google-yellow-300: #FDD663;
-$google-yellow-500: #FBBC04;
-$google-yellow-900: #E37400;
+$google-yellow-50: #fef7e0;
+$google-yellow-100: #feefc3;
+$google-yellow-300: #fdd663;
+$google-yellow-500: #fbbc04;
+$google-yellow-900: #e37400;
 
 $google-grey-50: #f8f9fa;
 $google-grey-100: #f1f3f4;
-$google-grey-200: #E8EAED;
-$google-grey-300: #DADCE0;
-$google-grey-500: #9AA0A6;
+$google-grey-200: #e8eaed;
+$google-grey-300: #dadce0;
+$google-grey-500: #9aa0a6;
 $google-grey-600: #80868b;
-$google-grey-700: #5F6368;
+$google-grey-700: #5f6368;
 $google-grey-900: #202124;
 
 // Breakpoints
@@ -35,10 +35,17 @@ $screen-l: '1280px';
 $screen-xl: '1680px';
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500|Google+Sans:500|Material+Icons|Roboto+Mono:400&subset=latin');
-@import 'sass/mixins.scss';
-@import 'sass/forms.scss';
-@import 'sass/menu.scss';
-@import 'sass/notes.scss';
+
+@import 'node_modules/@material/list/mdc-list';
+@import 'node_modules/@material/menu-surface/mdc-menu-surface';
+@import 'node_modules/@material/menu/mdc-menu';
+@import 'node_modules/@material/select/mdc-select';
+
+@import 'sass/mixins';
+@import 'sass/forms';
+@import 'sass/menu';
+@import 'sass/notes';
+@import 'sass/intro';
 
 
 body,
@@ -53,9 +60,10 @@ html {
   font-size: 13px;
   font-weight: normal;
   line-height: 16px;
-  margin: 0 0 .5em 0;
-  padding: 0;
+  margin: 0 0 .5em;
+  min-height: 360px;
   min-width: 310px;
+  padding: 0;
 }
 
 a {
@@ -66,6 +74,7 @@ a {
       color: $google-blue-300;
     }
 
+    border-radius: 2px;
     color: $google-blue-600;
     outline: none;
     text-decoration: none;

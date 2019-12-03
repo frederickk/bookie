@@ -1,10 +1,10 @@
 {
   "extDesc": {
-     "description": "Extension description",
-     "message": "Bookie ist eine Chrome Erweiterung, die ausgewählte Lesezeichnungen innerhalb der Chrome Menüleiste zugänglich ermöglicht."
+    "description": "Extension description",
+    "message": "Bookie ist eine Chrome Erweiterung, die ausgewählte Lesezeichnungen und zusätzliche Notizen innerhalb der Chrome Menüleiste zugänglich ermöglicht."
   },
   "extName": {
-     "description": "Extension name",
-     "message": "Bookie"
+    "description": "Extension name",
+    "message": "Bookie"
   }
 }

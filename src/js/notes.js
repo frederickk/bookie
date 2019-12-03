@@ -1,10 +1,12 @@
-const {getUrlParams, slugify, download} = require('utils');
+const {getUrlParams, slugify, download, stringToArrayBuffer} = require('utils');
 const bookmarks = require('bookmarks');
 const md = require('markdown-it')({
   breaks: true,
   quotes: '“”‘’',
   typographer: true,
 });
+const mdContainer = require('markdown-it-container');
+const mdDeflist = require('markdown-it-deflist');
 const mdEmoji = require('markdown-it-emoji');
 const mdFootnote = require('markdown-it-footnote');
 const mdIns = require('markdown-it-ins');
@@ -12,7 +14,10 @@ const mdMark = require('markdown-it-mark');
 const mdSub = require('markdown-it-sub');
 const mdSup = require('markdown-it-sup');
 const storage = require('storage');
+const stripHtml = require('string-strip-html');
+const toMarkdown = require('to-markdown');
 
+const {MDCSelect} = require('@material/select');
 
 
 class Notes {
@@ -30,7 +35,7 @@ class Notes {
     this.html_ = document.querySelector('.notes__content-html');
 
     /** @private */
-    this.titleSelect_ = document.querySelector('.notes__title-select');
+    this.titleSelect_;
 
     /** @private */
     this.saveContainer_ = document.querySelector('.notes__save-container');
@@ -56,17 +61,54 @@ class Notes {
    * @private
    */
   init_() {
+    md.use(mdContainer);
+    md.use(mdDeflist);
     md.use(mdEmoji);
-    md.use(mdMark);
     md.use(mdFootnote);
+    md.use(mdIns);
+    md.use(mdMark);
     md.use(mdSub);
     md.use(mdSup);
-    md.use(mdIns);
+
+    // Custom Markdown tags
+    [
+      'doc',    // ::: doc
+      'docs',   // ::: docs
+      'file',   // ::: file
+      'film',   // ::: film
+      'image',  // ::: image
+      'pdf',    // ::: pdf
+      'slide',  // ::: slide
+      'slides', // ::: slides
+      'sketch', // ::: sketch
+      'sheet',  // ::: sheet
+      'sheets', // ::: sheets
+      'video',  // ::: video
+      'zip',    // ::: zip
+    ].forEach((item) => {
+      const re = new RegExp(`^${item}\\s+(.*)$`, 'gi');
+
+      md.use(mdContainer, item, {
+        validate: (params) => {
+          return params.trim().match(re);
+        },
+        render: (tokens, idx) => {
+          const m = tokens[idx].info.trim().match(re);
+          if (tokens[idx].nesting === 1) {
+            m[0] = m[0].replace(item, '').trim();
+            return `<span class="notes__icon notes__icon--${item}"></span>${md.render(m[0])}\n`;
+          } else {
+            return '\n';
+          }
+        },
+      });
+    });
 
     // https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
-    let defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
-      return self.renderToken(tokens, idx, options);
-    };
+    const defaultRender = md.renderer.rules.link_open
+        || function(tokens, idx, options, env, self) {
+          return self.renderToken(tokens, idx, options);
+        };
 
     md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
       const aIndex = tokens[idx].attrIndex('target');
@@ -87,19 +129,41 @@ class Notes {
         const titleDiv = document.querySelector('.notes__title');
         titleDiv.id = slugify(this.categoryTitle_);
 
+        const selectList = document.querySelector('ul.mdc-list');
+
         storage.get('__bookmarkId__', (result) => {
           bookmarks.get(result, (items) => {
             items.forEach((entries) => {
               entries.children.forEach((entryList) => {
-                const option = document.createElement('option');
-                option.value = entryList.id;
-                option.innerText = entryList.title.toUpperCase();
-                if (entryList.title == this.categoryTitle_) {
-                  option.selected = true;
+                if (!entryList.title.startsWith('!')) {
+                  const option = document.createElement('li');
+                  option.innerText = entryList.title;
+                  option.classList.add('mdc-list-item');
+
+                  if (entryList.title == this.categoryTitle_) {
+                    document.title = `Bookie — ${entryList.title}`;
+
+                    document.querySelector('.mdc-select__selected-text')
+                        .innerText = entryList.title;
+                    option.classList.add('mdc-list-item--selected');
+                    option.setAttribute('aria-checked', true);
+                  } else {
+                    option.dataset.value = entryList.id;
+                  }
+
+                  selectList.appendChild(option);
                 }
-                this.titleSelect_.appendChild(option);
               });
             });
+
+            // TODO (frederickk): titleSelect_ "has" to be initialized after the
+            // menu list is popuplated. Perhaps this is because I'm using vanilla
+            // JS or more likely because I don't know what I'm doing.
+            this.titleSelect_ =
+                new MDCSelect(document.querySelector('.notes__select'));
+
+            this.titleSelect_.listen('MDCSelect:change',
+                this.titleSelectChangeHandler_.bind(this));
           });
         });
       });
@@ -128,9 +192,9 @@ class Notes {
    * @private
    * @param   {String}  str  Markdown content as string.
    */
-  render_(str = '') {
+  render_(str = ' ') {
     if (str) {
-      this.html_.innerHTML = md.render(str || '');
+      this.html_.innerHTML = md.render(str || ' ');
 
       document.querySelectorAll('a').forEach((item) => {
         item.addEventListener('click', this.aClickHandler_.bind(this));
@@ -142,32 +206,35 @@ class Notes {
    * @private
    */
   attach_() {
-    this.titleSelect_.addEventListener('change',
-      this.titleSelectChangeHandler_.bind(this));
-
+    this.markdown_.addEventListener('blur',
+        this.markdownBlurHandler_.bind(this));
 
     this.markdown_.addEventListener('click',
-      this.markdownClickHandler_.bind(this));
+        this.markdownClickHandler_.bind(this));
 
     this.markdown_.addEventListener('keydown',
-      this.markdownKeydownHandler_.bind(this));
+        this.markdownKeydownHandler_.bind(this));
 
     this.markdown_.addEventListener('keyup',
-      this.markdownKeyupHandler_.bind(this));
+        this.markdownKeyupHandler_.bind(this));
 
 
     this.html_.addEventListener('click',
-      this.htmlClickHandler_.bind(this));
+        this.htmlClickHandler_.bind(this));
 
-
-    this.saveButton_.addEventListener('click', () => {
-      if (window.confirm('Sure you want to save changes?')) {
+    try {
+      this.saveButton_.addEventListener('click', () => {
         this.markdownBlurHandler_();
-      }
-    });
+      });
+    } catch (err) {}
 
-    this.exportButton_.addEventListener('click',
-      this.exportClickHandler_.bind(this));
+    try {
+      this.exportButton_.addEventListener('click',
+          this.exportClickHandler_.bind(this));
+    } catch (err) {}
+
+    this.markdown_.addEventListener('paste',
+        this.pasteHandler_.bind(this));
   }
 
   /**
@@ -182,7 +249,7 @@ class Notes {
 
   /** @private */
   titleSelectChangeHandler_() {
-    const id = this.titleSelect_.options[this.titleSelect_.selectedIndex].value;
+    const id = this.titleSelect_.value;
     window.location.search = `?bookmarkId=${id}`;
   }
 
@@ -196,7 +263,9 @@ class Notes {
     this.html_.classList.remove('notes__content--hidden');
     this.markdown_.classList.add('notes__content--hidden');
 
-    this.saveContainer_.classList.add('notes__content--hidden');
+    try {
+      this.saveContainer_.classList.add('notes__content--hidden');
+    } catch (err) {}
   }
 
   /**
@@ -216,6 +285,8 @@ class Notes {
     if (event.keyCode === 9) {
       event.preventDefault();
       document.execCommand('insertHTML', false, '&#009');
+    } else if (event.keyCode === 13 && event.metaKey) {
+      this.markdownBlurHandler_();
     }
   }
 
@@ -236,10 +307,15 @@ class Notes {
     this.markdown_.classList.remove('notes__content--hidden');
     this.markdown_.focus();
 
-    this.saveContainer_.classList.remove('notes__content--hidden');
+    try {
+      this.saveContainer_.classList.remove('notes__content--hidden');
+    } catch (err) {}
 
     this.notes_.addEventListener('click', this.markdownBlurHandler_.bind(this));
 
+    // TODO (frederickk): MDCSelect doesn't close when HTML clicked, because
+    // click event isn't propogated. Removing this line prevents the reveal
+    // of the markdown textarea 🤔.
     event.stopPropagation();
 
     return;
@@ -254,9 +330,9 @@ class Notes {
     event.preventDefault();
 
     download(
-      this.markdown_.value,
-      `${slugify(this.categoryTitle_)}-bookie.md`,
-      'text/markdown'
+        this.markdown_.value,
+        `${slugify(this.categoryTitle_)}-bookie.md`,
+        'text/markdown'
     );
     // download(
     //   htmlToRtf.convertHtmlToRtf(this.html_.innerHTML),
@@ -265,6 +341,32 @@ class Notes {
     // );
 
     return;
+  }
+
+  /** @private */
+  pasteHandler_(event) {
+    const paste = (event.clipboardData || window.clipboardData);
+
+    event.preventDefault();
+
+    let text = paste.getData('text');
+    for (let i = 0; i < paste.items.length; i++) {
+      const item = paste.items[i];
+
+      if (item.type.includes('html')) {
+        item.getAsString((s) => {
+          text = stripHtml(toMarkdown(s, {
+            gfm: true,
+          }));
+          document.execCommand('insertText', false, text);
+        });
+
+        return;
+      }
+    }
+
+    document.execCommand('insertText', false, text);
+    return false;
   }
 
 }

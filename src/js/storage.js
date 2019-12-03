@@ -18,11 +18,11 @@ class Storage {
 
     try {
       chrome.storage.sync.set({
-        [key]: obj
+        [key]: obj,
       }, () => {
         // console.log(`${key} with ${obj} value saved`);
       });
-    } catch(err) {
+    } catch (err) {
       window.localStorage.setItem(key, JSON.stringify(obj));
     }
   }
@@ -34,11 +34,10 @@ class Storage {
   static get(key, callback = () => {}) {
     try {
       return chrome.storage.sync.get([key], (result) => {
-        // console.log(`Value currently is ${result[key]}`);
         callback(result[key]);
         return result[key];
       });
-    } catch(err) {
+    } catch (err) {
       return JSON.parse(window.localStorage.getItem(key));
     }
   }
@@ -53,17 +52,17 @@ class Storage {
         callback(result);
         return result;
       });
-    } catch(err) {
-      let archive = [];
+    } catch (err) {
+      const archive = [];
 
       // TODO (frederickk): Create a LocalStorage implmentation to access all.
-      for (var key in localstorage) {
-        console.log(key);
-      }
+      // for (var key in localstorage) {
+      //   console.log(key);
+      // }
       // items.forEach((key) => {
-    //     archive.push({
-    //       [key]: Storage.get(key),
-    //     });
+      //   archive.push({
+      //     [key]: Storage.get(key),
+      //   });
       // });
 
       return archive;
@@ -79,7 +78,7 @@ class Storage {
       chrome.storage.sync.remove((key) => {
         console.log(`${key} removed`);
       });
-    } catch(err) {
+    } catch (err) {
       window.localStorage.removeItem(key);
     }
   }
@@ -90,7 +89,7 @@ class Storage {
   static removeAll() {
     try {
       chrome.storage.sync.clear();
-    } catch(err) {
+    } catch (err) {
       window.localStorage.clear();
     }
   }

@@ -1,5 +1,4 @@
 const {checkValidURL, checkValueError} = require('utils');
-// const dashboard = require('dashboard');
 const storage = require('storage');
 const bookmarks = require('bookmarks');
 
@@ -87,11 +86,11 @@ class Modal {
     });
 
     document.querySelector('.modal .card').addEventListener(
-      'click', (event) => {
-      event.stopPropagation();
+        'click', (event) => {
+          event.stopPropagation();
 
-      return;
-    });
+          return;
+        });
   }
 
   /** @private */
@@ -123,19 +122,12 @@ class Modal {
           }, (result) => {
             this.createBookmarkEntry_(result.id, title, url);
           });
-       });
+        });
 
       } else {
         this.createBookmarkEntry_(entries[0].id, title, url);
       }
     });
-
-    // dashboard.addEntry(
-    //   this.menu_,
-    //   category,
-    //   title,
-    //   url
-    // );
 
     this.closeHandler_();
 

@@ -1,23 +1,20 @@
 @import url('https://fonts.sandbox.google.com/css?family=Google+Sans+Text+Beta+v2020:400,500');
 
 $notes-font-size: 18px;
+$notes-line-height: 1.5em; // 24px
 $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
 
 
 @mixin code() {
-  code {
-    @include dark-theme() {
-      background-color: rgba($google-yellow-50, .2);
-    }
-
-    background-color: $google-yellow-100;
-    display: block;
-    font-family: 'Roboto Mono', monospace;
-    padding: 1em;
-    white-space: pre-wrap;
+  @include dark-theme() {
+    background-color: rgba($google-yellow-50, .2);
   }
-}
 
+  background-color: $google-yellow-100;
+  font-family: 'Roboto Mono', monospace;
+  padding: 0 .5em;
+  white-space: pre-wrap;
+}
 
 
 .notes__body,
@@ -28,10 +25,15 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
   }
 
   background-color: $google-yellow-50;
+  box-sizing: border-box;
   color: $google-grey-900;
   font-family: $notes-font-family;
+  display: flex;
   font-size: $notes-font-size;
   letter-spacing: .01em;
+  line-height: $notes-line-height;
+  margin: auto;
+  max-width: 70ch;
 }
 
 .notes__container {
@@ -39,13 +41,15 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
   padding: 3px 0;
 
   .notes__save-container {
+    @include transition(bottom);
+
     background-color: $white;
     box-sizing: border-box;
     bottom: 0;
+    left: 0;
     padding: 12px 22px;
     position: fixed;
     text-align: right;
-    transition: bottom 100ms ease-in-out;
     width: 100%;
     z-index: 1000;
 
@@ -58,47 +62,209 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
   .notes__item {
     @include mq-min($screen-m) {
       min-height: 100vh;
-      max-width: 70ch;
     }
 
     margin: auto;
     padding: 3px 22px;
+    width: 100vw;
+  }
+
+  .notes__icon {
+    @include dark-theme() {
+      filter: invert(1) contrast(1) brightness(2);
+      mix-blend-mode: screen;
+    }
+
+    align-self: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: inline-block;
+    height: 16px;
+    // margin-left: 1em;
+    margin-right: 8px;
+    margin-top: 0 !important;
+    mix-blend-mode: multiply;
+    vertical-align: middle;
+    width: 16px;
+
+    & + p {
+      display: inline;
+
+      &::after {
+        content: '\A';
+        white-space: pre;
+      }
+    }
+
+    &--doc,
+    &--docs, {
+      background-image: url('./images/document.png');
+    }
+
+    &--file {
+      background-image: url('./images/file.png');
+    }
+
+    &--image {
+      background-image: url('./images/image.png');
+    }
+
+    &--pdf {
+      background-image: url('./images/pdf.png');
+    }
+
+    &--slide,
+    &--slides {
+      background-image: url('./images/presentation.png');
+    }
+
+    &--sketch {
+      background-image: url('./images/sketch.png');
+    }
+
+    &--sheet,
+    &--sheets {
+      background-image: url('./images/spreadsheet.png');
+    }
+
+    &--video,
+    &--film {
+      background-image: url('./images/video.png');
+    }
+
+    &--zip {
+      background-image: url('./images/zip.png');
+    }
   }
 
   .notes__title {
     @include dark-theme() {
-      // color: $google-yellow-300;
-      // border-bottom: 1px solid $google-yellow-300;
       color: $google-yellow-50;
-      border-bottom: 1px solid $google-yellow-300;
+      background-color: $google-grey-900;
     }
 
-    // border-bottom: 1px solid $google-yellow-900;
-    border-bottom: 1px solid $google-grey-700;
-    // color: $google-yellow-900;
+    background-color: $google-yellow-50;
+    box-sizing: border-box;
     color: $google-grey-900;
-    font-size: 9px;
-    font-weight: 600;
-    height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    justify-self: center;
     letter-spacing: .1em;
-    padding: .5em 0;
+    max-width: 70ch;
+    padding: .5em 22px;
+    position: fixed;
     text-transform: uppercase;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+
+    .notes__icon {
+      @include transition(background-image);
+
+      background-image: url('./icon-inactive-48.png');
+      height: 24px;
+      margin-left: 0;
+      margin-right: 0;
+      width: 24px;
+
+      &:hover {
+        background-image: url('./icon-48.png');
+      }
+    }
   }
 
-  .notes__title-select {
-    background-color: transparent;
-    border: 0;
-    margin: 0;
-    font-family: 'Google Sans', $notes-font-family;
-    border-radius: 0;
-    text-indent: 0;
-    box-sizing: border-box;
-    overflow: visible;
-    appearance: none;
-    padding: .5em 0;
+  .notes__select {
+    @include dark-theme() {
+      @include mdc-select-focused-outline-color($google-blue-300);
+      @include mdc-select-hover-outline-color($google-yellow-100);
+      @include mdc-select-ink-color($google-yellow-100);
+      @include mdc-select-label-color($google-blue-300);
+      @include mdc-select-outline-color($google-yellow-100);
+    }
 
-    option {
-      text-transform: uppercase;
+    // @include mdc-select-focused-outline-color($google-blue-500);
+    // @include mdc-select-hover-outline-color($google-blue-500);
+    // @include mdc-select-ink-color($google-grey-700);
+    // @include mdc-select-label-color($google-blue-500);
+    // @include mdc-select-outline-color($google-grey-700);
+
+    align-self: center;
+    text-indent: 0;
+    margin: .5em 0;
+
+    .mdc-select__anchor {
+      @include dark-theme() {
+        filter: grayscale(0);
+      }
+
+      // TODO(frederickk): Hack to overcome specificity issue with setting
+      // light-theme (default) colors with MDC SASS includes.
+      filter: grayscale(1);
+    }
+
+    .mdc-list,
+    .mdc-list-item {
+      @include dark-theme() {
+        color: $white;
+        background-color: $google-grey-900;
+      }
+
+      background-color: $white;
+      color: $google-grey-900;
+    }
+
+    .mdc-list-item {
+      @include transition(background-color, 50ms);
+
+      font-size: 13px;
+      font-weight: 500;
+
+      &::after,
+      &::before {
+        background-color: transparent;
+      }
+
+      &:hover {
+        @include dark-theme() {
+          background-color: $google-grey-700;
+        }
+
+        background-color: $google-yellow-100;
+      }
+
+      &--selected {
+        @include dark-theme() {
+          background-color: $black;
+        }
+
+        background-color: $google-yellow-50;
+      }
+    }
+
+    .mdc-select__selected-text {
+      align-items: center;
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    .mdc-select__selected-text,
+    .mdc-list-item {
+      @include dark-theme() {
+        color: $google-yellow-50;
+      }
+
+      color: $google-grey-900;
+      font-family: 'Google Sans', $notes-font-family;
+      letter-spacing: .1em;
+    }
+
+    .mdc-select__dropdown-icon {
+      @include dark-theme() {
+        filter: invert(1) contrast(1) brightness(2);
+      }
+
+      filter: grayscale(1);
     }
   }
 
@@ -108,26 +274,25 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
     }
 
     color: $google-grey-900;
+    margin-top: calc(72px + 1em);
     padding-bottom: 3rem;
 
     &-markdown {
+      @include transition(padding, 50ms);
+
       background-color: transparent;
       border: 0;
+      box-sizing: border-box;
       cursor: text;
       font-family: 'Roboto Mono', monospace;
       font-size: 1.25rem;
       font-weight: 400;
       min-height: calc(100vh - 15rem);
       margin-bottom: 72px;
-      padding: 1em 0;
+      padding: 1em;
       resize: none;
-      transition: padding 50ms ease-in-out;
       white-space: pre-line;
       width: 100%;
-
-      &:focus {
-        padding: 1em 1em;
-      }
     }
 
     &-html {
@@ -150,44 +315,42 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
         }
       }
 
+      code {
+        @include code();
+
+        display: inline-block;
+      }
+
       h1,
       h2,
       h3 {
         font-family: 'Google Sans', $notes-font-family;
         font-size: $notes-font-size;
-        // font-variant: small-caps;
         font-weight: 500;
+        line-height: $notes-line-height;
         margin: 2rem 0 0;
-        // text-transform: lowercase;
       }
 
       h4,
       h5,
       h6,
       p {
-        @include code();
+        code {
+          @include code();
+
+          display: block;
+          padding: 1em;
+        }
 
         font-size: $notes-font-size;
         font-weight: 400;
+        line-height: $notes-line-height;
         margin: 2rem 0 0;
-      }
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-          & + p,
-        & + span, {
-          color: $google-grey-700;
-          margin-top: .5rem;
-        }
       }
 
       hr {
         @include dark-theme() {
-          border-color: $google-yellow-300;
+          border-color: $google-yellow-100;
         }
 
         border-top: 1px dotted $google-grey-700;
@@ -199,11 +362,11 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
         @include dark-theme() {
           mix-blend-mode: soft-light;
         }
+        @include transition(filter);
 
         width: 100%;
         filter: grayscale(1);
         mix-blend-mode: multiply;
-        transition: filter 100ms ease-in-out;
 
         &:hover {
           filter: grayscale(0);
@@ -221,7 +384,12 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
       }
 
       pre {
-        @include code();
+        code {
+          @include code();
+
+          display: block;
+          padding: 1em;
+        }
       }
 
       table {
@@ -279,3 +447,7 @@ $notes-font-family: 'Google Sans Text Beta v2020', 'Roboto', sans-serif;
     }
   }
 }
+
+
+
+

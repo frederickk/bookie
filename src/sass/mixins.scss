@@ -41,6 +41,11 @@
 // Media query prefers-color-scheme
 @mixin dark-theme() {
   @media (prefers-color-scheme: dark) {
-      @content
+    @content;
   }
+}
+
+// Transition
+@mixin transition($prop, $ms: 100ms, $easing: ease-in-out) {
+  transition: $prop $ms $easing;
 }

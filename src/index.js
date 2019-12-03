@@ -1,5 +1,5 @@
-const menu = require('menu');
-const modal = require('modal');
+const Menu = require('menu');
+const Modal = require('modal');
 
-new menu();
-new modal();
+new Menu();
+new Modal();

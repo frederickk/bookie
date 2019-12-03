@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title></title>
+    <title>Bookie</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -18,10 +18,27 @@
           <input id="export" type="button" class="form__input button button--text" value="Export Markdown">
         </form>
       </div>
-      <div class="notes__item" data-bookmark-id="">
-        <div class="notes__title">
-          <select class="notes__title-select"></select>
+
+      <div class="notes__title">
+        <div class="mdc-select mdc-select--outlined mdc-select--no-label notes__select">
+          <div class="mdc-select__anchor">
+            <i class="mdc-select__dropdown-icon notes__select-icon"></i>
+            <div class="mdc-select__selected-text"></div>
+            <div class="mdc-notched-outline">
+              <div class="mdc-notched-outline__leading"></div>
+              <div class="mdc-notched-outline__trailing"></div>
+            </div>
+          </div>
+
+          <div class="mdc-select__menu mdc-menu mdc-menu-surface notes__select-option">
+            <ul class="mdc-list"></ul>
+          </div>
         </div>
+
+        <a href="./intro.html#markdown" target="_blank" class="notes__icon" title="Bookie Mardown Help">&nbsp;</a>
+      </div>
+
+      <div class="notes__item" data-bookmark-id="">
         <textarea class="notes__content notes__content-markdown notes__content--hidden" placeholder=""></textarea>
         <div class="notes__content notes__content-html">
           <span class="notes__content-placeholder">&nbsp;</span>

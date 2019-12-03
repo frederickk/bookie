@@ -1,7 +1,7 @@
 const {slugify} = require('utils');
 
 
-class Dashboard {
+class MenuItem {
   /**
    * Creates category and header DOM elements.
    * @param {String} bookmarkId  numberic ID of bookmark folder
@@ -10,7 +10,7 @@ class Dashboard {
    */
   static createCategory(bookmarkId, categoryId, title) {
     if (categoryId && title) {
-      const menuTitle = document.createElement('li');
+      const menuTitle = document.createElement('div');
       menuTitle.id = categoryId;
       menuTitle.className = 'menu__title';
       menuTitle.innerText = title;
@@ -18,7 +18,7 @@ class Dashboard {
       const menuHeader = document.createElement('li');
       menuHeader.className = 'menu__header';
       menuHeader.appendChild(menuTitle);
-      menuHeader.appendChild(Dashboard.createEditTools(bookmarkId));
+      menuHeader.appendChild(MenuItem.createEditTools(bookmarkId));
 
       const menuContainer = document.createElement('ul');
       menuContainer.className = 'menu__divider';
@@ -50,7 +50,7 @@ class Dashboard {
 
     const note = document.createElement('a');
     note.className = 'menu__note material-icons';
-    note.innerText = 'receipt'; //'library_books';
+    note.innerText = 'receipt'; // 'library_books';
     note.title = 'Add/edit notes';
     note.dataset.bookmarkId = bookmarkId;
 
@@ -71,7 +71,7 @@ class Dashboard {
   }
 
   /**
-   * Creates dashboard item DOM elements.
+   * Creates MenuItem DOM elements.
    * @param {String} id  ID for checkbox entry.
    */
   static createEntry(id, title, url) {
@@ -110,16 +110,17 @@ class Dashboard {
     if (menuTitle) {
       menuContainer = menuTitle.parentElement.parentElement;
     } else {
-      menuContainer = Dashboard.createCategory(bookmarkId, categoryId, category);
+      menuContainer = MenuItem.createCategory(
+          bookmarkId, categoryId, category);
       parent.appendChild(menuContainer);
     }
 
     const entryId = slugify(title);
-    const entry = Dashboard.createEntry(entryId, title, url);
+    const entry = MenuItem.createEntry(entryId, title, url);
     menuContainer.appendChild(entry);
-
   }
+
 }
 
 
-module.exports = Dashboard;
+module.exports = MenuItem;

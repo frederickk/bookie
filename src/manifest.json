@@ -2,9 +2,8 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "short_name": "__MSG_extName__",
-  "version": "0.1.0",
+  "version": "0.1.7",
   "default_locale": "en",
-
   "description": "__MSG_extDesc__",
   "icons": {
     "16": "icon-16.png",
@@ -13,9 +12,15 @@
   },
   "author": "Ken Frederick",
    "browser_action": {
-    "default_icon": "icon-16.png",
+    "default_icon": "icon-16@2x.png",
     "default_popup": "menu.html",
     "default_title": "__MSG_extName__"
+  },
+  "background": {
+    "scripts": [
+      "background.min.js"
+    ],
+    "persistent": false
   },
   "permissions": [
     "activeTab",

@@ -1,10 +1,10 @@
 {
   "extDesc": {
-     "description": "Extension description",
-     "message": "Bookie is a Chrome Extension that makes a curated set of bookmarks accessible within the Chrome menubar."
+    "description": "Extension description",
+    "message": "Bookie is a Chrome Extension that makes a curated set of bookmarks and additional notes accessible within the Chrome menubar."
   },
   "extName": {
-     "description": "Extension name",
-     "message": "Bookie"
+    "description": "Extension name",
+    "message": "Bookie"
   }
 }

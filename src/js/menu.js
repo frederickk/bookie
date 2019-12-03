@@ -1,8 +1,7 @@
 const {removeElement, toggleMultiple} = require('utils');
-const dashboard = require('dashboard');
-const storage = require('storage');
 const bookmarks = require('bookmarks');
-
+const menuItem = require('menuItem');
+const storage = require('storage');
 
 
 class Menu {
@@ -36,22 +35,14 @@ class Menu {
    */
   init_() {
     bookmarks.search({
-      'title': 'Bookie'
+      'title': 'Bookie',
     }, (result) => {
       if (result.length <= 0) {
-        bookmarks.create({
-          'parentId': '1', // 1 = Bookmarks Toolbar
-          'title': 'Bookie',
-        }, (obj) => {
-          this.bookmarkFolderId_ = obj.id;
-        });
+        window.alert('UH-OH');
       } else {
         this.bookmarkFolderId_ = result[0].id;
+        this.populate_();
       }
-
-      storage.set('__bookmarkId__', this.bookmarkFolderId_);
-
-      this.populate_();
     });
   }
 
@@ -62,7 +53,9 @@ class Menu {
     bookmarks.get(this.bookmarkFolderId_, (items) => {
       items.forEach((entries) => {
         entries.children.forEach((entryList) => {
-          this.append_(entryList.title, entryList.children, entryList.id);
+          if (!entryList.title.startsWith('!')) {
+            this.append_(entryList.title, entryList.children, entryList.id);
+          }
         });
       });
 
@@ -79,12 +72,12 @@ class Menu {
    */
   append_(category, entries, bookmarkId) {
     entries.forEach((item) => {
-      dashboard.addEntry(
-        this.menu_,
-        category,
-        item.title,
-        item.url,
-        bookmarkId
+      menuItem.addEntry(
+          this.menu_,
+          category,
+          item.title,
+          item.url,
+          bookmarkId
       );
     });
   }
@@ -130,10 +123,12 @@ class Menu {
       });
     });
 
-    document.body.addEventListener('click',() => {
+    document.body.addEventListener('click', () => {
       const checkboxes = document.querySelectorAll('.menu__checkbox');
       checkboxes.forEach((checkbox) => {
-        checkbox.classList.remove('form__input', 'checkbox', 'checkbox--delete', 'menu__checkbox--visible');
+        checkbox.classList.remove(
+            'form__input', 'checkbox', 'checkbox--delete',
+            'menu__checkbox--visible');
       });
     });
 
@@ -170,7 +165,8 @@ class Menu {
     const parent = item.parentElement.parentElement.parentElement;
     const checkboxes = parent.querySelectorAll('.menu__checkbox');
     checkboxes.forEach((checkbox) => {
-      toggleMultiple(checkbox, 'form__input checkbox checkbox--delete menu__checkbox--visible');
+      toggleMultiple(checkbox,
+          'form__input checkbox checkbox--delete menu__checkbox--visible');
     });
     event.stopPropagation();
 
@@ -184,11 +180,11 @@ class Menu {
     const urlInput = document.querySelector('#url');
 
     categoryInput.value = item.parentNode.parentNode
-      .querySelector('.menu__title').textContent.trim();
+        .querySelector('.menu__title').textContent.trim();
 
     chrome.tabs.query({
       currentWindow: true,
-      active: true
+      active: true,
     }, (tabs) => {
       displayTitleInput.value = tabs[0].title;
       urlInput.value = tabs[0].url;
@@ -204,10 +200,26 @@ class Menu {
   noteClickHandler_(item) {
     const bookmarkId = item.dataset.bookmarkId;
 
-    chrome.tabs.create({
-      url: `notes.html?bookmarkId=${bookmarkId}`,
-      active: true,
+    storage.get('__windowId__', (result) => {
+      // TODO (frederickk): This could be cleaner, perhaps instead of closing
+      // whatever window is open, just chagnge the URL of the Bookie tab.
+      if (result) {
+        chrome.windows.remove(result);
+      }
+
+      chrome.windows.create({
+        focused: true,
+        left: window.screen.width / 2,
+        top: 0,
+        type: 'popup',
+        url: `notes.html?bookmarkId=${bookmarkId}`,
+        width: window.screen.width / 2,
+      }, (window) => {
+        storage.set('__windowId__', window.id);
+        storage.set('__windowSessionId__', window.sessionId);
+      });
     });
+
 
     event.stopPropagation();
 

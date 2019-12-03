@@ -1,25 +1,22 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const compress = require('compression');
 
-const production = (process.env.NODE_ENV === 'production');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const SassLintPlugin = require('sass-lint-webpack');
+const autoprefixer = require("autoprefixer");
 
 const config = {
-  watch: production ? false : true,
-  cache: true,
-  devtool: 'inline-sourcemap',
+  mode: 'development',
 
-  devServer: {
-    contentBase: './src',
-  },
-
-  node: {
-    global: false,
-  },
+  devtool: 'inline-source-map',
 
   entry: {
-    // background: path.join(__dirname, './src/js/background.js'),
+    background: [
+      path.join(__dirname, './src/background.js'),
+    ],
     index: [
       path.join(__dirname, './src/index.js'),
       path.join(__dirname, './src/index.scss'),
@@ -33,8 +30,39 @@ const config = {
     modules: [
       path.resolve(__dirname, './src/js'),
       path.resolve(__dirname, './src/sass'),
-      'node_modules',
+      path.resolve(__dirname, 'node_modules'),
     ]
+  },
+
+  module: {
+    rules: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      loader: "eslint-loader",
+    }, {
+      test: /\.s?css$/,
+      use: [
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss',
+            plugins: [
+              require('autoprefixer')(),
+            ]
+          }
+        }, {
+          loader: 'sass-loader',
+          options: {
+            includePaths: [path.resolve(__dirname, 'node_modules')],
+          },
+        },
+      ]
+    }, {
+      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+      loader: 'url-loader?limit=100000'
+    }],
   },
 
   output: {
@@ -43,48 +71,19 @@ const config = {
     filename: './[name].min.js',
   },
 
-  module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      query: {},
-    }, {
-      test: /\.(css|sass|scss)$/,
-      exclude: /node_modules/,
-      use: ExtractTextPlugin.extract({
-        use: [(production) ? {
-          loader: 'css-loader',
-          options: {
-            minimize: true
-          }
-        } : 'css-loader', 'postcss-loader', 'sass-loader']
-      }),
-    }, {
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader', 'postcss-loader']
-    }, {
-      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-      loader: 'url-loader?limit=100000'
-    }],
-  },
-
-  plugins: production ? [
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false,
-        },
-      },
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        postcss: [
+          autoprefixer()
+        ]
+      }
     }),
-    new ExtractTextPlugin({
-      filename: './index.min.css',
-      allChunks: true,
+    new SassLintPlugin({
+      files: './src/*.scss'
     }),
-  ] : [
-    new ExtractTextPlugin({
-      filename: './index.min.css',
-      allChunks: true,
+    new MiniCssExtractPlugin({
+      filename: 'index.min.css'
     }),
   ],
 };
