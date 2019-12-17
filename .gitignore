@@ -1,5 +1,4 @@
-# OS generated files #
-######################
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -8,16 +7,16 @@
 ehthumbs.db
 Thumbs.db
 
-
-# Compiled source #
-###################
+# Compiled source
 *.min.*
+*.html
 *.zip
 *.pem
 *.crx
 
-
-# Folders #
-###################
-assets
+# Folders
 node_modules
+assets
+
+# Confidential
+credentials.json

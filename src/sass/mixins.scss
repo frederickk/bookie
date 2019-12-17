@@ -46,6 +46,17 @@
 }
 
 // Transition
-@mixin transition($prop, $ms: 100ms, $easing: ease-in-out) {
-  transition: $prop $ms $easing;
+@mixin transition($props...) {
+  $props-list: ();
+  @for $i from 1 through length($props) {
+    $prop: nth($props, $i);
+    $props-list: append($props-list, $prop);
+    // $props-list: append($props-list, var(--transition-ms) ease-in-out);
+    $props-list: append($props-list, 150ms ease-in-out);
+    @if $i != length($props) {
+      $props-list: append($props-list, unquote($string: ', '));
+    }
+  }
+
+  transition: $props-list;
 }

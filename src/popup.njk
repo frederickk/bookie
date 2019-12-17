@@ -1,0 +1,28 @@
+{% extends 'templates/base.njk' %}
+
+{% import 'templates/macros.njk' as macros %}
+
+{% block style %}
+  <link rel="stylesheet" href="./popup.min.css" />
+{% endblock %}
+
+{% block body %}
+  <div id="menu__container" class="menu__container"></div>
+
+  <div id="modal" class="modal">
+    <form action="" name="edit" class="card">
+      {{ macros.modal_item('category', 'Category') }}
+      {{ macros.modal_item('display-title', 'Title') }}
+      {{ macros.modal_item('url', 'URL') }}
+      <div>
+        <input id="id" type="hidden" value="">
+        {{ macros.button('add', 'Add') }}
+        {{ macros.button_text('cancel', 'Cancel') }}
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script src="./popup.min.js"></script>
+{% endblock %}

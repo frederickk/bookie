@@ -1,0 +1,35 @@
+{% extends 'templates/base.njk' %}
+
+{% import 'templates/macros.njk' as macros %}
+{% import 'templates/mdc-macros.njk' as mdc %}
+
+{% set body_class = 'notes__body' %}
+
+{% block style %}
+  <link rel="stylesheet" href="./notes.min.css" />
+{% endblock %}
+
+{% block body %}
+  <div id="notes__container" class="notes__container">
+    <header class="notes__header">
+      {{ mdc.select('notes__select') }}
+      <a href="./intro.html#markdown" target="_blank" class="notes__icon notes__icon--bookie" title="Bookie Mardown Help">&nbsp;</a>
+    </header>
+
+    {% call macros.markdown_container() %}
+&nbsp;
+    {% endcall %}
+
+    <footer class="notes__save-container notes__content--hidden">
+      <form action="" name="save">
+        {{ macros.button_text('save', 'Save') }}
+        {{ macros.button_text('export', 'Export Markdown') }}
+      </form>
+    </footer>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script src="./notes.min.js"></script>
+{% endblock %}
+

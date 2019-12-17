@@ -1,0 +1,112 @@
+$white: #fff;
+$black: #000;
+$os-blue: #2257d1;
+
+$google-blue-50: #e8f0fe;
+$google-blue-100: #d2e3fc;
+$google-blue-300: #8ab4f8;
+$google-blue-500: #4285f4;
+$google-blue-600: #1a73e8;
+$google-blue-900: #174ea6;
+
+$google-red-50: #fce8e6;
+$google-red-100: #fad2cf;
+$google-red-300: #f28b82;
+$google-red-600: #d93025;
+$google-red-900: #a50e0e;
+
+$google-yellow-50: #fef7e0;
+$google-yellow-100: #feefc3;
+$google-yellow-300: #fdd663;
+$google-yellow-500: #fbbc04;
+$google-yellow-900: #e37400;
+
+$google-grey-50: #f8f9fa;
+$google-grey-100: #f1f3f4;
+$google-grey-200: #e8eaed;
+$google-grey-300: #dadce0;
+$google-grey-400: #bdc1c6;
+$google-grey-500: #9aa0a6;
+$google-grey-600: #80868b;
+$google-grey-700: #5f6368;
+$google-grey-900: #202124;
+
+// Breakpoints
+$screen-s: '400px';
+$screen-m: '768px';
+$screen-l: '1280px';
+$screen-xl: '1680px';
+
+@import url('https://fonts.googleapis.com/css?family=Google+Sans+Text:400,500|Google+Sans:500|Material+Icons|Google+Sans+Mono:400&subset=latin');
+@import 'mixins';
+
+:root {
+  --white: #{$white};
+  --black: #{$google-grey-900};
+  --black-trans: #{rgba($google-grey-900, .6)};
+  --os-blue: #{$os-blue};
+
+  --google-blue-50: #{$google-blue-50};
+  --google-blue-100: #{$google-blue-100};
+  --google-blue-300: #{$google-blue-300};
+  --google-blue-500: #{$google-blue-500};
+  --google-blue-600: #{$google-blue-600};
+  --google-blue-900: #{$google-blue-900};
+
+  --google-red-50: #{$google-red-50};
+  --google-red-100: #{$google-red-100};
+  --google-red-300: #{$google-red-300};
+  --google-red-600: #{$google-red-600};
+  --google-red-900: #{$google-red-900};
+
+  --google-yellow-50: #{$google-yellow-50};
+  --google-yellow-100: #{$google-yellow-100};
+  --google-yellow-300: #{$google-yellow-300};
+  --google-yellow-500: #{$google-yellow-500};
+  --google-yellow-900: #{$google-yellow-900};
+
+  --google-grey-50: #{$google-grey-50};
+  --google-grey-100: #{$google-grey-100};
+  --google-grey-200: #{$google-grey-200};
+  --google-grey-300: #{$google-grey-300};
+  --google-grey-500: #{$google-grey-500};
+  --google-grey-600: #{$google-grey-600};
+  --google-grey-700: #{$google-grey-700};
+  --google-grey-900: #{$google-grey-900};
+
+  --border-radius: 2px;
+  --transition-ms: 150ms;
+
+  --typeface-body: 'Google Sans Text', sans-serif;
+  --typeface-display: 'Google Sans', sans-serif;
+  --typeface-code: 'Google Sans Mono', monospace;
+  --typeface-size--sm: 9px;
+  --typeface-size--md: 14px;
+  --typeface-size--lg: 18px;
+  --typeface-line-height--md: 16px;
+  --typeface-line-height--lg: 1.5em; // 24px
+
+  @include dark-theme() {
+    --white: #{$google-grey-900};
+    --black: #{$google-grey-100};
+    --black-trans: #{rgba($black, .4)};
+    --os-blue: #{$google-blue-300};
+
+    --google-blue-50: #{$google-blue-900};
+    --google-blue-600: #{$google-blue-300};
+    --google-blue-900: #{$google-blue-100};
+
+    --google-red-50: #{$google-red-300};
+    --google-red-600: #{$google-red-900};
+    --google-red-900: #{$google-red-100};
+
+    --google-yellow-50: #{rgba($google-yellow-50, .2)};
+    --google-yellow-100: #{rgba($google-yellow-100, .2)}; // --google-grey-700
+    --google-yellow-300: #{rgba($google-yellow-100, .3)};
+
+    --google-grey-300: #{$google-grey-700};
+    --google-grey-600: #{$google-grey-400};
+    --google-grey-700: #{$google-grey-300};
+    --google-grey-900: #{$google-grey-100};
+  }
+}

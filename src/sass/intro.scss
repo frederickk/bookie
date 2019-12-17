@@ -1,39 +1,40 @@
-.intro__body,
-.intro__container {
-  @include dark-theme() {
-    color: $white;
-    background-color: $google-grey-900;
+.intro {
+  &__body,
+  &__container {
+    box-sizing: border-box;
+    background-color: var(--white);
+    color: var(--google-grey-900);
+    font-family: var(--typeface-body);
+    font-size: var(--typeface-size--lg);
+    font-weight: 400;
+    letter-spacing: .01em;
+    line-height: var(--typeface-line-height--lg);
+    padding-bottom: 4em;
   }
 
-  box-sizing: border-box;
-  background-color: $white;
-  color: $google-grey-900;
-  font-family: $notes-font-family;
-  font-size: $notes-font-size;
-  font-weight: 400;
-  letter-spacing: .01em;
-  line-height: $notes-line-height;
-  padding-bottom: 4em;
-}
+  &__container {
+    @include mq-min($screen-m) {
+      padding: 3px 20vw;
+    }
 
-.intro__container {
-  // margin: auto;
-  // max-width: 70ch;
-  // padding: 3px 0;
-  margin: 0;
-  padding: 3px 25vw;
+    // margin: auto;
+    // max-width: 70ch;
+    // padding: 3px 0;
+    margin: 0;
+    padding: 3px 5vw;
 
-  h1,
-  h2,
-  h3 {
-    font-size: $notes-font-size;
-    font-weight: 500;
-    line-height: $notes-line-height;
-    margin: 2rem 0 0;
+    h1,
+    h2,
+    h3 {
+      font-size: var(--typeface-size--lg) !important;
+      font-weight: 500;
+      line-height: var(--typeface-line-height--lg);
+      margin: 2rem 0 0;
+    }
   }
 
   img,
-  .intro__img,
+  &__img,
   p {
     clear: both;
     box-sizing: border-box;
@@ -41,7 +42,7 @@
   }
 
   img,
-  .intro__img {
+  &__img {
     padding-bottom: 1em;
     padding-top: 1em;
 
@@ -51,7 +52,11 @@
     }
   }
 
-  .intro__icon {
+  &__icon {
+    @include dark-theme() {
+      filter: invert(1);
+    }
+
     box-sizing: initial;
     display: inline-block;
     height: 16px;
@@ -61,33 +66,34 @@
     width: 16px;
   }
 
-  .intro__table {
-    display: block;
+  &__table {
+    @include mq-min($screen-m) {
+      flex-wrap: nowrap;
+    }
+
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
 
     &--cell {
-      clear: none;
-      color: $google-grey-700;
-      float: left;
+      @include mq-min($screen-m) {
+        width: 25%;
+      }
+
+      color: var(--google-grey-700);
       padding-right: 1em;
-      width: 25%;
+      width: calc(50% - 1em);
     }
   }
 
-  .intro__title,
-  .intro__sub-title {
+  &__title,
+  &__sub-title {
     display: block;
     margin-top: 4em;
   }
 
-  .intro__title {
-    @include dark-theme() {
-      border-bottom: 1px solid $white;
-    }
-
-    border-top: 1px solid $google-grey-700;
+  &__title {
+    border-top: 1px solid var(--google-grey-700);
     font-weight: 500;
   }
-
-
 }

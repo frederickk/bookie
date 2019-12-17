@@ -1,0 +1,25 @@
+.modal {
+  @include transition(opacity);
+
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  &--active {
+    background-color: var(--black-trans);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+  }
+}
