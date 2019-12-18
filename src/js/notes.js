@@ -1,4 +1,4 @@
-const {getUrlParams, slugify, download, stringToArrayBuffer} = require('utils');
+const {getUrlParams, slugify, download} = require('utils');
 const bookmarks = require('bookmarks');
 const md = require('markdown-it')({
   breaks: true,
@@ -233,6 +233,9 @@ class Notes {
           this.exportClickHandler_.bind(this));
     } catch (err) {}
 
+    this.markdown_.addEventListener('copy',
+        this.copyHandler_.bind(this));
+
     this.markdown_.addEventListener('paste',
         this.pasteHandler_.bind(this));
   }
@@ -341,6 +344,15 @@ class Notes {
     // );
 
     return;
+  }
+
+  /** @private */
+  copyHandler_(event) {
+    const selection = document.getSelection();
+    const richtext = md.render(selection.toString());
+
+    event.clipboardData.setData('text/html', richtext);
+    event.preventDefault();
   }
 
   /** @private */
