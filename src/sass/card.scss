@@ -1,0 +1,19 @@
+.card {
+  @include dark-theme() {
+    box-shadow: 0 2px 4px 0 rgba($black, .6);
+  }
+
+  align-items: stretch;
+  background: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px 0 rgba($black, .4);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+  justify-content: space-between;
+  margin: 36px;
+  padding: 18px;
+  text-align: right;
+  width: 240px;
+}

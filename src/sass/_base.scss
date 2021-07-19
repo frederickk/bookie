@@ -1,0 +1,32 @@
+@import 'mixins';
+
+body,
+html {
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--white);
+  color: var(--black);
+  font-family: var(--typeface-body);
+  font-size: var(--typeface-size--md);
+  font-weight: normal;
+  line-height: var(--typeface-line-height--md);
+  margin: 0 0 .5em;
+  padding: 0;
+}
+
+a {
+  &:link,
+  &:visited,
+  &:active {
+    @include transition(background-color, color);
+
+    border-radius: var(--border-radius);
+    color: var(--google-blue-600);
+    outline: none;
+    text-decoration: none;
+  }
+
+  &:hover {
+    background-color: var(--google-blue-50);
+    color: var(--google-blue-900);
+  }
+}

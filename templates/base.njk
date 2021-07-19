@@ -1,0 +1,31 @@
+{% set relative_dir = relative_dir | default('./') %}
+{% set title = title | default('Bookie') %}
+{% set body_class = body_class | default('') %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Ken Frederick">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width, height=device-height" -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="icon" type="image/png" href="{{ relative_dir }}images/icon-16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="{{ relative_dir }}images/icon-16@2x.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ relative_dir }}images/icon-48.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="{{ relative_dir }}images/icon-96.png" sizes="96x96">
+    <title>{{ title }}</title>
+    {% block style %}
+      <link rel="stylesheet" href="{{ relative_dir }}index.min.css" />
+    {% endblock %}
+  </head>
+  <body class="{{ body_class }}">
+    {% block body %}{% endblock %}
+
+    {% block script %}
+      <script src="{{ relative_dir }}index.min.js"></script>
+    {% endblock %}
+  </body>
+</html>

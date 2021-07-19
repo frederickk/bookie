@@ -1,11 +1,11 @@
-![Bookie icon](./assets/icon-16.png)
+![Bookie icon](./src/images/icon-16.png)
 
 # Bookie
 
 ### Bookie is a [Chrome Extension](https://chrome.google.com/webstore/detail/bookie/bfjfkconjpndkfkjinlahajgnlkbdkgp) that makes a curated set of bookmarks and additional notes accessible within the Chrome menubar.
 
 
-![Bookie menu](./assets/screenshot-00.png)
+![Bookie menu](./src/images/screenshot-00.jpg)
 
 
 
@@ -18,8 +18,8 @@ Bookmarks can be added or removed directly within the Bookie dropdown menu.
 - "note" Add/edit notes with Markdown.
 - "bookmark" Organize within Chrome bookmarks native UI.
 
-![Bookie menu](./assets/screenshot-04.png)
-![Bookie menu](./assets/screenshot-01.png)
+![Bookie menu](./src/images/screenshot-04.jpg)
+![Bookie menu](./src/images/screenshot-01.jpg)
 
 
 
@@ -27,7 +27,7 @@ Bookmarks can be added or removed directly within the Bookie dropdown menu.
 
 The bookmarks within Bookie are simply Chrome bookmarks stored in a folder called "Bookie". You can manage the entries for Bookie within the menu itself (via edit and add options) or simply through the native Chrome bookmarks UI.
 
-![Bookie menu](./assets/screenshot-05.png)
+![Bookie menu](./src/images/screenshot-05.jpg)
 
 
 
@@ -35,8 +35,8 @@ The bookmarks within Bookie are simply Chrome bookmarks stored in a folder calle
 
 You can also add additional notes to accompany each category, these notes are stored within local storage and are accessible by you. But they will sync across all devices when logged into Chrome. Formatting of notes is handled with markdown, simply clicking on the text box exposes the underlying markdown.
 
-![Bookie menu](./assets/screenshot-02.png)
-![Bookie menu](./assets/screenshot-03.png)
+![Bookie menu](./src/images/screenshot-02.jpg)
+![Bookie menu](./src/images/screenshot-03.jpg)
 
 ---
 ## Installation
@@ -59,7 +59,7 @@ You can also add additional notes to accompany each category, these notes are st
 | Command | Description |
 |-|-|
 | `$ npm run dev`   | Spin up Webpack watch task and development server ([0.0.0.0:1112](http://0.0.0.0:1112)) |
-| `$ npm run build` | Compile (and uglify) necessary files into .zip (Chrome) and .zip (Firefox) |
-| `$ npm run build:chrome` | Compile (and uglify) necessary files into .zip only for Chrome |
-| `$ npm run build:firefox` | Compile (and uglify) necessary files into .zip only for Firefox |
+| `$ npm run build` | Compile (and uglify) |
+| `$ npm run package:chrome` | Compile (and uglify) necessary files into .zip only for Chrome |
+| `$ npm run package:firefox` | Compile (and uglify) necessary files into .zip only for Firefox |
 

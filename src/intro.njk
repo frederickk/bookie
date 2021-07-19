@@ -1,0 +1,88 @@
+{% extends 'templates/base.njk' %}
+
+{% import 'templates/macros.njk' as macros %}
+
+{% set body_class = 'intro__body' %}
+
+{% block style %}
+  <link rel="stylesheet" href="./notes.min.css" />
+{% endblock %}
+
+{% block body %}
+  <div class="intro__container" id="notes__container">
+    <div>
+      <p>
+        <h1>
+          Bookie is a <a href="https://chrome.google.com/webstore/detail/bookie/bfjfkconjpndkfkjinlahajgnlkbdkgp" target="_blank">Chrome Extension</a> that makes a curated set of bookmarks and additional notes accessible within the Chrome menubar.
+        </h1>
+
+        <img src="./images/screenshot-00.jpg" class="intro__img" alt="Bookie menu">
+
+        <div class="intro__table">
+          <p class="intro__table--cell">
+            <img src="./images/add.png" class="intro__icon" alt="Add"><br>
+            Adds bookmarks.
+          </p>
+
+          <p class="intro__table--cell">
+            <img src="./images/edit.png" class="intro__icon" alt="Edit"><br>
+            Remove item from group.
+          </p>
+
+          <p class="intro__table--cell">
+            <img src="./images/notes.png" class="intro__icon" alt="Notes"><br>
+            Add/edit notes with Markdown.
+          </p>
+
+          <p class="intro__table--cell">
+            <img src="./images/bookmark.png" class="intro__icon" alt="Bookmark"><br>
+            Organize within <a href="chrome://bookmarks" target="_blank">Chrome bookmarks</a> native UI.
+          </p>
+        </div>
+
+        <img src="./images/screenshot-01.jpg" class="intro__img" alt="Bookie menu bar">
+      </p>
+
+      <p>
+        <span class="intro__title" name="bookmarks" id="bookmarks">Manage bookmarks</span>
+        Bookmarks can be added easily within the menu, and will automatically populate with info from the current tab (e.g. title and URL).
+        <img src="./images/screenshot-02.jpg" class="intro__img" alt="Bookie add menu">
+        <img src="./images/screenshot-03.jpg" class="intro__img" alt="Bookie add modal">
+
+        Removing bookmarks can also be handled inline.
+        <img src="./images/screenshot-04.jpg" class="intro__img" alt="Bookie edit menu">
+        <img src="./images/screenshot-05.jpg" class="intro__img" alt="Bookie edit interface">
+
+        The bookmarks within Bookie are simply <a href="chrome://bookmarks" target="_blank">Chrome bookmarks</a> stored in a folder called “Bookie”. You can manage the entries for Bookie within the menu itself (via edit and add options) or simply through the native Chrome bookmarks UI.
+        <img src="./images/screenshot-09.jpg" class="intro__img" alt="Bookie bookmark menu">
+        <img src="./images/screenshot-10.jpg" class="intro__img" alt="Chrome bookmarks manager">
+      </p>
+
+      <p>
+        <span class="intro__title" name="notes" id="notes">Notes</span>
+        You can also add additional notes to accompany each category, these notes are stored within local storage and are accessible by you. But they will sync across all devices when logged into Chrome.
+
+        <img src="./images/screenshot-07.jpg" class="intro__img" alt="Notes menu">
+
+        <span class="intro__sub-title" name="markdown" id="markdown">Markdown</span>
+        Formatting of notes is handled with markdown, simply clicking on the text box exposes the underlying markdown. Bookie's notes support markdown's syntax as well as some additional custom tags.
+        <img src="./images/screenshot-08.jpg" class="intro__img" alt="Notes menu">
+
+        <span class="intro__sub-title" name="markdown" id="markdown">Smart-ish copy and paste</span>
+        Copied HTML or Rich Text is automatically converted to Markdown when pasted.
+
+        Below is an example of the rich formatting available for notes, simply <code>shift</code>+click on this text box to reveal the "source" markdown.
+      </p>
+    </div>
+
+    <div id="notes__container" class="notes__container">
+      {% call macros.markdown_container() -%}
+        {{ macros.markdown_example() | safe }}
+      {%- endcall %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script src="./notes.min.js"></script>
+{% endblock %}

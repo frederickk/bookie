@@ -6,51 +6,36 @@
     $y ($x + -8px) 0 $color;
 }
 
-
 .form__input {
-  font-family: 'Google Sans', 'Roboto', sans-serif;
+  font-family: var(--typeface-body);
   font-size: 14px;
   font-weight: 500;
 
   &::placeholder {
-    @include dark-theme() {
-      color: $google-blue-300;
-    }
-
     font-size: 12px;
   }
 
   & + label {
-    @include dark-theme() {
-      color: $google-grey-200;
-    }
-
     @include mq-min($screen-s) {
       padding: 4px 16px 0;
     }
 
     color: inherit;
     display: block;
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--typeface-body);
     font-size: 12px;
     height: 16px;
     padding: 4px 8px 0;
     position: relative;
   }
 
-
   &.button {
-    @include dark-theme() {
-      background-color: $google-grey-900;
-      border: 1px solid $google-grey-700;
-      color: $google-blue-300;
-    }
     @include transition(background-color);
 
-    background-color: $white;
-    border: 1px solid $google-grey-300;
+    background-color: var(--white);
+    border: 1px solid var(--google-grey-300);
     border-radius: 4px;
-    color: $google-blue-600;
+    color: var(--google-blue-600);
     cursor: pointer;
     height: 36px;
     margin: 0 6px;
@@ -62,12 +47,12 @@
 
     &:hover {
       @include dark-theme() {
-        background-color: $google-blue-300;
-        color: $google-grey-900;
+        background-color: var(--google-blue-300);
+        color: var(--google-grey-900);
       }
 
-      background-color: $google-blue-50;
-      color: $google-blue-900;
+      background-color: var(--google-blue-50);
+      color: var(--google-blue-900);
     }
 
     &--text {
@@ -78,9 +63,6 @@
 
 
   &.text {
-    @include dark-theme() {
-      color: $google-grey-200;
-    }
     @include mq-min($screen-s) {
       height: 56px;
       padding: 0 16px;
@@ -94,53 +76,36 @@
 
     &:active,
     &:focus {
-      @include dark-theme() {
-        border-color: $google-blue-300;
-      }
-
-      border-color: $google-blue-600;
+      border-color: var(--google-blue-600);
       border-width: 2px;
     }
 
     &:hover {
-      border-color: $google-grey-700;
+      border-color: var(--google-grey-700);
     }
 
     &--filled {
       @include dark-theme() {
         background-color: rgba($google-blue-300, .24);
-        border-bottom: 1px solid $google-blue-300;
       }
 
-      background-color: $google-grey-100;
+      background-color: var(--google-grey-100);
       border: 0;
-      border-bottom: 1px solid $google-blue-600;
+      border-bottom: 1px solid var(--google-blue-600);
       border-radius: 0;
     }
 
     &--outline {
-      @include dark-theme() {
-        background-color: $google-grey-900;
-        border: 1px solid $google-blue-300;
-      }
-
-      background-color: $white;
-      border: 1px solid $google-blue-600;
+      background-color: var(--white);
+      border: 1px solid var(--google-blue-600);
     }
 
     &--error {
-      @include dark-theme() {
-        background-color: $google-red-300;
-        border-color: $google-red-900;
-        color: $google-red-900;
-      }
-
-      background-color: $google-red-50;
-      border-color: $google-red-600;
-      color: $google-red-600;
+      background-color: var(--google-red-50);
+      border-color: var(--google-red-600);
+      color: var(--google-red-600);
     }
   }
-
 
   &.checkbox {
     cursor: pointer;
@@ -159,7 +124,7 @@
     & + label:before {
       @include transition(background-color);
 
-      background-color: $google-blue-600;
+      background-color: var(--google-blue-600);
       box-shadow: none;
       content: '';
       display: inline-block;
@@ -175,31 +140,31 @@
     }
 
     &:hover + label:before {
-      background-color: $google-blue-900;
+      background-color: var(--google-blue-900);
     }
 
     &:checked + label:before {
-      background-color: $google-blue-900;
+      background-color: var(--google-blue-900);
     }
 
     &:disabled + label {
-      color: $white;
+      color: var(--white);
       cursor: auto;
     }
 
     &:disabled + label:before {
-      background-color: $google-grey-600;
+      background-color: var(--google-grey-600);
     }
 
     &--delete {
       & + label:before {
-        background-color: $white;
-        border: 2px solid $google-red-600;
+        background-color: var(--white);
+        border: 2px solid var(--google-red-600);
         border-radius: 50%;
       }
 
       & + label:after {
-        @include remove-line($google-red-600, -.25px);
+        @include remove-line(var(--google-red-600), -.25px);
         height: 2px;
         left: .15em;
         top: .2em;
@@ -208,12 +173,12 @@
       }
 
       &:hover + label:before {
-        border: 2px solid $google-red-900;
-        background-color: $google-red-900;
+        border: 2px solid var(--google-red-900);
+        background-color: var(--google-red-900);
       }
 
       &:hover + label:after {
-        @include remove-line($white, -.25px);
+        @include remove-line(var(--white), -.25px);
       }
 
       // &:focus + label:before {
@@ -221,12 +186,12 @@
       // }
 
       &:checked + label:before {
-        border: 2px solid $google-red-900;
-        background-color: $google-red-900;
+        border: 2px solid var(--google-red-900);
+        background-color: var(--google-red-900);
       }
 
       &:checked + label:after {
-        @include remove-line($white, -.25px);
+        @include remove-line(var(--white), -.25px);
       }
     }
   }

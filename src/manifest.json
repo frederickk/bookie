@@ -6,26 +6,27 @@
   "default_locale": "en",
   "description": "__MSG_extDesc__",
   "icons": {
-    "16": "icon-16.png",
-    "48": "icon-48.png",
-    "128": "icon-128.png"
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
   },
   "author": "Ken Frederick",
-   "browser_action": {
-    "default_icon": "icon-16@2x.png",
-    "default_popup": "menu.html",
+  "browser_action": {
+    "default_icon": "images/icon-16@2x.png",
+    "default_popup": "popup.html",
     "default_title": "__MSG_extName__"
   },
   "background": {
     "scripts": [
       "background.min.js"
     ],
-    "persistent": false
+    "persistent": true
   },
   "permissions": [
     "activeTab",
     "bookmarks",
-    "storage"
+    "storage",
+    "unlimitedStorage"
   ],
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsq0Nl3zyxPibvofZ4m/yKZNqfzrkjqUqW/Zw54ICLpazBfPDPI4l4WIXlXltp6eCGQY/R8AbWTVQBzH6CX4+U/IlerjTydZ1ufwm54yco5U0qKkOaGf6fgbVyIa5rzXCRjW/exYiCtvv5JzO+C0LTpbKIKwRaDHSYPlge6QfQsHN6k+sXoOEOlJ9Ox5qzMV2FxtKJ1BllE3hACTtiyLf5oNRLZcACMMlAKm0zkiOudoahRgnT/LfH8NdbYEZFF5q7h26q5egoGudKA7h8Ss/gAY6jaPchvc9nBGtjoLJ5T5pFhttjnZ/bDk793a3xXnEkUdKc5OidXO258UuhBhvwwIDAQAB"
 }

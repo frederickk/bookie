@@ -1,14 +1,22 @@
-.menu__container {
-  margin: 0;
-  padding: 3px 0;
+@import 'card';
+@import 'modal';
 
-  .menu__divider {
+.menu {
+  &__container {
+    margin: 0;
+    max-width: 280px;
+    min-height: 360px;
+    min-width: 280px;
+    padding: 3px 0;
+  }
+
+  &__divider {
     margin: 9px 0 4.5px;
     padding: 6px 0 0;
 
     &:not(:first-child) {
       @include dark-theme() {
-        border-top: 1px solid rgba($white, .2);
+        border-color: rgba($white, .2);
       }
 
       border: 0;
@@ -16,7 +24,7 @@
     }
   }
 
-  .menu__header {
+  &__header {
     display: flex;
     justify-content: space-between;
     padding: 0 22px;
@@ -30,13 +38,9 @@
     }
   }
 
-  .menu__title {
-    @include dark-theme() {
-      color: $google-grey-500;
-    }
-
-    color: $google-grey-700;
-    font-family: 'Google Sans', 'Roboto', sans-serif;
+  &__title {
+    color: var(--google-grey-700);
+    font-family: var(--typeface-body);
     font-size: 9px;
     font-weight: 600;
     letter-spacing: .1em;
@@ -44,110 +48,60 @@
     text-transform: uppercase;
   }
 
-  .menu__header,
-  .menu__item {
+  &__header,
+  &__item {
     user-select: none;
   }
 
-  .menu__item {
+  &__item {
     @include transition(background-color);
 
     cursor: pointer;
     margin: 4.5px 0;
+    overflow: hidden;
     padding: 3px 22px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &:hover {
-      background-color: $os-blue;
-      color: $white;
+      background-color: var(--os-blue);
+      color: var(--white);
     }
 
     &:active {
       background-color: transparent;
     }
+  }
 
-    .menu__checkbox {
-      @include transition(opacity);
+  &__checkbox {
+    @include transition(opacity);
 
-      display: none;
-      opacity: 0;
-      vertical-align: middle;
+    display: inline-block;
+    opacity: 0;
+    vertical-align: middle;
+    visibility: hidden;
 
-      &--visible {
-        display: inline-block;
-        height: auto;
-        width: auto;
-      }
+    &--visible {
+      height: auto;
+      visibility: visible;
+      width: auto;
     }
   }
 
-  .menu__edit-container {
+  &__edit-container {
     @include transition(opacity);
 
     opacity: 0;
     text-align: right;
-
-    .menu__edit,
-    .menu__add,
-    .menu__note,
-    .menu__organize {
-      border-radius: 50%;
-      font-size: 13px;
-      padding: .5em;
-    }
-  }
-}
-
-
-.card {
-  @include dark-theme() {
-    background-color: $google-grey-900;
-    box-shadow: 0 2px 4px 0 rgba($black, .6);
-    color: $google-grey-200;
   }
 
-  align-items: stretch;
-  background: $white;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px 0 rgba($black, .4);
-  display: flex;
-  flex-direction: column;
-  height: 320px;
-  justify-content: space-between;
-  margin: 36px;
-  padding: 18px;
-  text-align: right;
-  width: 240px;
-}
-
-
-.modal {
-  @include mq-min($screen-s) {
-  }
-  @include transition(opacity);
-
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  left: 0;
-  opacity: 0;
-  pointer-events: none;
-  position: fixed;
-  top: 0;
-  width: 100%;
-
-  &--active {
-    @include dark-theme() {
-      background-color: rgba($google-grey-900, .6);
-    }
-
-    background-color: rgba($black, .4);
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .modal__item {
-    display: flex;
-    flex-direction: column;
+  &__edit,
+  &__add,
+  &__note,
+  &__organize {
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 13px;
+    padding: .5em;
   }
 }
