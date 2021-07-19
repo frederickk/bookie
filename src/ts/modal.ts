@@ -3,12 +3,12 @@ import {Storage} from './storage';
 import {Bookmarks} from './bookmarks';
 
 export class Modal {
-  private modal_ = <HTMLElement>document.querySelector('#modal');
-  private readonly category_ =
+  private modalEl_ = <HTMLElement>document.querySelector('#modal');
+  private readonly categoryInputEl_ =
     <HTMLInputElement>document.querySelector('#category');
-  private readonly title_ =
+  private readonly titleInputEl_ =
     <HTMLInputElement>document.querySelector('#display-title');
-  private readonly url_ =
+  private readonly urlInputEl_ =
     <HTMLInputElement>document.querySelector('#url');
   private buttonAdd_ = <HTMLInputElement>document.querySelector('#add');
   private buttonCancel_ = <HTMLInputElement>document.querySelector('#cancel');
@@ -19,9 +19,9 @@ export class Modal {
 
   /** Clears form inputs. */
   private clearForm_() {
-    this.category_.value = '';
-    this.title_.value = '';
-    this.url_.value = '';
+    this.categoryInputEl_.value = '';
+    this.titleInputEl_.value = '';
+    this.urlInputEl_.value = '';
   }
 
   /** Creates bookmark entry. */
@@ -44,7 +44,7 @@ export class Modal {
       this.addUserBookmarkHandler_.bind(this));
     this.buttonCancel_.addEventListener('click',
       this.closeModalHandler_.bind(this));
-    this.modal_.addEventListener('click', this.closeModalHandler_.bind(this));
+    this.modalEl_.addEventListener('click', this.closeModalHandler_.bind(this));
     card.addEventListener('click', this.ignoreEventHandler_);
   }
 
@@ -60,14 +60,14 @@ export class Modal {
   /** Checks for flagged input errors. */
   private checkForErrors_() {
     return new Promise<void>((resolve, reject) => {
-      if (checkValueError(this.category_, 'text--error')) {
+      if (checkValueError(this.categoryInputEl_, 'text--error')) {
         reject();
       }
-      if (checkValueError(this.title_, 'text--error')) {
+      if (checkValueError(this.titleInputEl_, 'text--error')) {
         reject();
       }
-      if (checkValueError(this.url_, 'text--error')) {
-        if (!checkValidURL(this.url_.value)) {
+      if (checkValueError(this.urlInputEl_, 'text--error')) {
+        if (!checkValidURL(this.urlInputEl_.value)) {
           reject();
         }
       }
@@ -78,9 +78,9 @@ export class Modal {
 
   /** Creates new bookmark entry from user input. */
   private addUserBookmarkHandler_() {
-    const category = this.category_.value;
-    const title = this.title_.value;
-    const url = this.url_.value;
+    const category = this.categoryInputEl_.value;
+    const title = this.titleInputEl_.value;
+    const url = this.urlInputEl_.value;
 
     this.checkForErrors_()
     .catch(() => {
@@ -143,6 +143,6 @@ export class Modal {
   /** Closes modal and clears form inputs. */
   private closeModalHandler_() {
     this.clearForm_();
-    this.modal_.classList.remove('modal--active');
+    this.modalEl_.classList.remove('modal--active');
   }
 }

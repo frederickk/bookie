@@ -2,7 +2,7 @@
   Creates an input button.
  #}
 {% macro button(id='', value='', classNames='') %}
-  <input id="{{ id }}" name="{{ id }}" type="button" class="form__input button {{ classNames -}}" value="{{ value }}">
+  <input id="{{ id }}" name="{{ id }}" type="button" class="form__input button {{ classNames -}}" value="{{ value }}" onclick="console.log('foo');">
 {% endmacro %}
 
 {#

@@ -6,15 +6,17 @@ import {Storage} from './ts/storage';
 import {stripHtml} from 'string-strip-html';
 import toMarkdown from 'to-markdown';
 
+const CSS_PREFIX = 'notes__';
+
 export class Notes {
   private bookmarkId_ = getUrlParams()['bookmarkId'];
   private md_ = new MardownHelper();
 
-  private notesContainerEl_ = <HTMLElement>document.querySelector('#notes__container');
-  private notesItemEl_ = <HTMLElement>document.querySelector('.notes__item');
-  private markdownEl_ = <HTMLInputElement>document.querySelector('.notes__content--markdown');
-  private htmlEl_ = <HTMLElement>document.querySelector('.notes__content--html');
-  private saveContainerEl_ = <HTMLElement>document.querySelector('.notes__save-container');
+  private notesContainerEl_ = <HTMLElement>document.querySelector(`#${CSS_PREFIX}container`);
+  private notesItemEl_ = <HTMLElement>document.querySelector(`.${CSS_PREFIX}item`);
+  private markdownEl_ = <HTMLInputElement>document.querySelector(`.${CSS_PREFIX}content--markdown`);
+  private htmlEl_ = <HTMLElement>document.querySelector(`.${CSS_PREFIX}content--html`);
+  private saveContainerEl_ = <HTMLElement>document.querySelector(`.${CSS_PREFIX}save-container`);
 
   private categorySelect_!: MDCSelect;
   private saveButton_ = <HTMLInputElement>document.querySelector('#save');
@@ -23,6 +25,7 @@ export class Notes {
 
   private categoryTitle_: string = '';
   private shiftPressed_ = false;
+  // private copyAsRichText_ = false;
 
   constructor() {
     this.init_();
@@ -52,7 +55,7 @@ export class Notes {
     // menu list is popuplated. Perhaps this is because I'm using vanilla
     // JS or more likely because I don't know what I'm doing.
     this.categorySelect_ = new MDCSelect(
-      <HTMLElement>document.querySelector('.notes__select'));
+      <HTMLElement>document.querySelector(`.${CSS_PREFIX}select`));
 
     this.categorySelect_.listen('MDCSelect:change',
       this.categorySelectChangeHandler_.bind(this));
@@ -62,7 +65,7 @@ export class Notes {
   private setCategoryTitle_(title: string) {
     this.categoryTitle_ = title;
 
-    const titleDiv = <HTMLElement>document.querySelector('.notes__header');
+    const titleDiv = <HTMLElement>document.querySelector(`.${CSS_PREFIX}header`);
     titleDiv.id = slugify(this.categoryTitle_);
   }
 
@@ -130,7 +133,6 @@ export class Notes {
       const noteId = slugify(option?.innerText);
       const noteAsMarkdown = this.markdownEl_.value.trim();
 
-      console.log('updateRenderedNote_()', noteId);
       if (noteAsMarkdown === '' ||
           noteAsMarkdown === 'undefined' ||
           noteAsMarkdown === undefined) {
@@ -157,7 +159,7 @@ export class Notes {
 
   /** Attaches event listeners. */
   private attach_() {
-    window.addEventListener('keydown',
+    document.addEventListener('keydown',
         this.windowKeydownHandler_.bind(this));
     window.addEventListener('keyup',
         this.windowKeyupHandler_.bind(this));
@@ -172,8 +174,8 @@ export class Notes {
         this.markdownBlurHandler_.bind(this));
     this.markdownEl_.addEventListener('paste',
         this.pasteHandler_.bind(this));
-    this.markdownEl_.addEventListener('copy',
-        this.copyHandler_.bind(this));
+    // this.markdownEl_.addEventListener('copy',
+    //     this.copyHandler_.bind(this));
 
     this.htmlEl_.addEventListener('click',
         this.htmlClickHandler_.bind(this));
@@ -202,6 +204,10 @@ export class Notes {
     if (event.shiftKey) {
       this.shiftPressed_ = true;
     }
+    // TODO (frederickk): Trigger copy as richtext.
+    // if (event.altKey && event.metaKey && event.key === 'c') {
+    //   this.copyAsRichText_ = true;
+    // }
   }
 
   /**
@@ -250,28 +256,28 @@ export class Notes {
    */
   private markdownBlurHandler_() {
     this.updateRenderedNote_();
-    this.htmlEl_.classList.remove('notes__content--hidden');
-    this.markdownEl_.classList.add('notes__content--hidden');
-    this.saveContainerEl_.classList?.add('notes__content--hidden');
+    this.htmlEl_.classList.remove(`${CSS_PREFIX}content--hidden`);
+    this.markdownEl_.classList.add(`${CSS_PREFIX}content--hidden`);
+    this.saveContainerEl_.classList?.add(`${CSS_PREFIX}content--hidden`);
   }
 
   /** Handles paste data, transforming captured HTML into markdown. */
-  private pasteDataHandler_(data: DataTransferItemList) {
-    // let str = paste.getData('text');
-    let markdown = '';
+  private pasteDataHandler_(txt: string, data: DataTransferItemList) {
+    let markdown = txt;
 
     Array.from(data).forEach((item: DataTransferItem) =>  {
       if (item.type.includes('html')) {
         item.getAsString((html: string) => {
           markdown = this.renderHTMLToMarkdown_(html);
-          // document.execCommand('insertText', false, markdown);
+          console.log('markdown', markdown);
+          document.execCommand('insertText', false, markdown);
         });
 
         return;
+      } else {
+        document.execCommand('insertText', false, markdown);
       }
     });
-
-    document.execCommand('insertText', false, markdown);
   }
 
   /**
@@ -280,26 +286,29 @@ export class Notes {
    */
   private pasteHandler_(event: ClipboardEvent) {
     const paste: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
+
     event.preventDefault();
 
-    this.pasteDataHandler_(paste.items);
+    this.pasteDataHandler_(paste.getData('text'), paste.items);
 
     return false;
   }
 
-  /**
-   * Handles copy event within markdown editor/preview.
-   * @listens markdownEl~event:copy
-   */
-   private copyHandler_(event: ClipboardEvent) {
-    const copy: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
-    event.preventDefault();
+  // /**
+  //  * Handles copy event within markdown editor/preview.
+  //  * @listens markdownEl~event:copy
+  //  */
+  //  private copyHandler_(event: ClipboardEvent) {
+  //    if (this.copyAsRichText_) {
+  //     this.copyAsRichText_ = false;
+  //     const copy: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
+  //     const selection = document.getSelection();
+  //     const richtext = this.md_.render(selection?.toString());
 
-    const selection = document.getSelection();
-    const richtext = this.md_.render(selection?.toString());
-
-    copy.setData('text/html', richtext);
-  }
+  //     copy.setData('text/html', richtext);
+  //     event.preventDefault();
+  //   }
+  // }
 
   /**
    * Hides container of HTML content and reveals Mardown container.
@@ -307,10 +316,10 @@ export class Notes {
    */
   private htmlClickHandler_(event: Event) {
     if (this.shiftPressed_) {
-      this.htmlEl_.classList.add('notes__content--hidden');
-      this.markdownEl_.classList.remove('notes__content--hidden');
+      this.htmlEl_.classList.add(`${CSS_PREFIX}content--hidden`);
+      this.markdownEl_.classList.remove(`${CSS_PREFIX}content--hidden`);
       this.markdownEl_.focus();
-      this.saveContainerEl_.classList?.remove('notes__content--hidden');
+      this.saveContainerEl_.classList?.remove(`${CSS_PREFIX}content--hidden`);
 
       this.notesContainerEl_.addEventListener('click', this.markdownBlurHandler_.bind(this));
     }

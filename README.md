@@ -17,6 +17,7 @@ Bookmarks can be added or removed directly within the Bookie dropdown menu.
 - "pen" Remove item from group.
 - "note" Add/edit notes with Markdown.
 - "bookmark" Organize within Chrome bookmarks native UI.
+- "tab" Open all bookmarks within category in a tab group.
 
 ![Bookie menu](./src/images/screenshot-04.jpg)
 ![Bookie menu](./src/images/screenshot-01.jpg)

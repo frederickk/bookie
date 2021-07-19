@@ -378,6 +378,7 @@
   }
 
   &__header {
+    background-color: var(--google-yellow-50);
     box-sizing: border-box;
     color: inherit;
     display: flex;
@@ -391,6 +392,23 @@
     top: 0;
     width: 100%;
     z-index: 1000;
+
+    .button {
+      align-items: center;
+      background-color: transparent;
+      border-color: transparent;
+      display: inline-flex;
+      height: 56px;
+      margin: .5em 0;
+    }
+  }
+
+  &__header-group {
+    align-items: center;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: 2ch;
+    justify-content: flex-start;
   }
 
   &__select {
