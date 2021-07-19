@@ -12,9 +12,16 @@
 {% block body %}
   <div id="notes__container" class="notes__container">
     <header class="notes__header">
-      {{ mdc.select('notes__select') }}
-      <a href="./intro.html#markdown" target="_blank" class="notes__icon notes__icon--bookie" title="Bookie Mardown Help">&nbsp;</a>
+      <div class="notes__header-group">
+        {{ mdc.select('notes__select') }}
+      </div>
+      <div class="notes__header-group">
+        <a href="https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md#face-smiling" target="_blank" class="button material-icons" title="Emoji reference">mood {# 🤔 #}</a>
+        <a href="./intro.html#markdown" target="_blank" class="button material-icons" title="Bookie Markdown Reference">code</a>
+        <a href="./intro.html" target="_blank" class="notes__icon notes__icon--bookie" title="Bookie Help">&nbsp;</a>
+      </div>
     </header>
+
 
     {% call macros.markdown_container() %}
 &nbsp;

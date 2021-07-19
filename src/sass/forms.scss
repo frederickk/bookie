@@ -1,4 +1,4 @@
-@mixin remove-line($color, $x: 0, $y: .5em) {
+@mixin remove-line($color, $x: 0, $y: .35em) {
   box-shadow:
     $y ($x + -2px) 0 $color,
     $y ($x + -4px) 0 $color,
@@ -8,11 +8,11 @@
 
 .form__input {
   font-family: var(--typeface-body);
-  font-size: 14px;
+  font-size: var(--typeface-size--md);
   font-weight: 500;
 
   &::placeholder {
-    font-size: 12px;
+    font-size: var(--typeface-size--md);
   }
 
   & + label {
@@ -23,8 +23,8 @@
     color: inherit;
     display: block;
     font-family: var(--typeface-body);
-    font-size: 12px;
-    height: 16px;
+    font-size: inherit;
+    height: inherit;
     padding: 4px 8px 0;
     position: relative;
   }
@@ -165,8 +165,9 @@
 
       & + label:after {
         @include remove-line(var(--google-red-600), -.25px);
+
         height: 2px;
-        left: .15em;
+        left: .2em;
         top: .2em;
         transform: rotate(90deg);
         width: 2px;

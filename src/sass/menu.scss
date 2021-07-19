@@ -41,7 +41,7 @@
   &__title {
     color: var(--google-grey-700);
     font-family: var(--typeface-body);
-    font-size: 9px;
+    font-size: var(--typeface-size--sm);
     font-weight: 600;
     letter-spacing: .1em;
     padding: .5em 0;
@@ -77,12 +77,16 @@
     @include transition(opacity);
 
     display: inline-block;
+    margin-left: 0;
+    margin-right: 0;
     opacity: 0;
     vertical-align: middle;
     visibility: hidden;
+    width: 0;
 
     &--visible {
       height: auto;
+      margin: inherit;
       visibility: visible;
       width: auto;
     }
@@ -98,10 +102,11 @@
   &__edit,
   &__add,
   &__note,
-  &__organize {
+  &__organize,
+  &__open-tabs {
     border-radius: 50%;
     cursor: pointer;
-    font-size: 13px;
+    font-size: var(--typeface-size--md);
     padding: .5em;
   }
 }

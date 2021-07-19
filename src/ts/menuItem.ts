@@ -58,12 +58,20 @@ export class MenuItem {
     organize.title = 'Organize within Chrome bookmarks';
     organize.dataset.bookmarkId = bookmarkId;
 
+    const openTabs = document.createElement('a');
+    openTabs.className = `${CSS_PREFIX}open-tabs material-icons`;
+    openTabs.innerText = 'tab';
+    openTabs.title = 'Open bookmarks in tab group';
+    openTabs.dataset.bookmarkId = bookmarkId;
+    openTabs.dataset.title = title;
+
     const container = document.createElement('div');
     container.className = `${CSS_PREFIX}edit-container`;
     container.appendChild(add);
     container.appendChild(edit);
     container.appendChild(note);
     container.appendChild(organize);
+    container.appendChild(openTabs);
 
     return container;
   }
