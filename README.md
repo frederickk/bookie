@@ -2,7 +2,7 @@
 
 # Bookie
 
-### Bookie is a [Chrome Extension](https://chrome.google.com/webstore/detail/bookie/bfjfkconjpndkfkjinlahajgnlkbdkgp) that makes a curated set of bookmarks and additional notes accessible within the Chrome menubar.
+### Bookie is a [Chrome Extension](https://chrome.google.com/webstore/detail/bookie/bfjfkconjpndkfkjinlahajgnlkbdkgp) you can use to create a curated set of bookmarks and associated markdown notes, accessible within the Chrome menubar.
 
 
 ![Bookie menu](./src/images/screenshot-00.jpg)
@@ -17,6 +17,7 @@ Bookmarks can be added or removed directly within the Bookie dropdown menu.
 - "pen" Remove item from group.
 - "note" Add/edit notes with Markdown.
 - "bookmark" Organize within Chrome bookmarks native UI.
+- "tab" Open all bookmarks within category in a tab group.
 
 ![Bookie menu](./src/images/screenshot-04.jpg)
 ![Bookie menu](./src/images/screenshot-01.jpg)
