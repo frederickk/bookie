@@ -265,15 +265,13 @@ export class Notes {
   private pasteDataHandler_(txt: string, data: DataTransferItemList) {
     let markdown = txt;
 
-    Array.from(data).forEach((item: DataTransferItem) =>  {
+    Array.from(data).every((item: DataTransferItem) =>  {
       if (item.type.includes('html')) {
         item.getAsString((html: string) => {
           markdown = this.renderHTMLToMarkdown_(html);
           console.log('markdown', markdown);
           document.execCommand('insertText', false, markdown);
         });
-
-        return;
       } else {
         document.execCommand('insertText', false, markdown);
       }
@@ -288,6 +286,7 @@ export class Notes {
     const paste: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
 
     event.preventDefault();
+    event.stopPropagation();
 
     this.pasteDataHandler_(paste.getData('text'), paste.items);
 

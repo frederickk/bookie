@@ -8,7 +8,7 @@
     font-size: var(--typeface-size--lg);
     font-weight: 400;
     letter-spacing: .01em;
-    line-height: var(--typeface-line-height--lg);
+    line-height: var(--typeface-line-height);
     padding-bottom: 4em;
   }
 
@@ -28,8 +28,12 @@
     h3 {
       font-size: var(--typeface-size--lg) !important;
       font-weight: 500;
-      line-height: var(--typeface-line-height--lg);
+      line-height: var(--typeface-line-height);
       margin: 2rem 0 0;
+    }
+
+    .notes__item {
+      overflow-y: scroll;
     }
   }
 
