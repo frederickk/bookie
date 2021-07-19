@@ -172,6 +172,8 @@ export class Notes {
         this.markdownBlurHandler_.bind(this));
     this.markdownEl_.addEventListener('paste',
         this.pasteHandler_.bind(this));
+    this.markdownEl_.addEventListener('copy',
+        this.copyHandler_.bind(this));
 
     this.htmlEl_.addEventListener('click',
         this.htmlClickHandler_.bind(this));
@@ -283,6 +285,20 @@ export class Notes {
     this.pasteDataHandler_(paste.items);
 
     return false;
+  }
+
+  /**
+   * Handles copy event within markdown editor/preview.
+   * @listens markdownEl~event:copy
+   */
+   private copyHandler_(event: ClipboardEvent) {
+    const copy: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
+    event.preventDefault();
+
+    const selection = document.getSelection();
+    const richtext = this.md_.render(selection?.toString());
+
+    copy.setData('text/html', richtext);
   }
 
   /**
