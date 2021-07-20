@@ -1,7 +1,10 @@
+import {APP_ID} from './_defs';
+
 import {checkValidURL, checkValueError} from './utils';
 import {Storage} from './storage';
 import {Bookmarks} from './bookmarks';
 
+/** Class to create modal within action popup. */
 export class Modal {
   private modalEl_ = <HTMLElement>document.querySelector('#modal');
   private readonly categoryInputEl_ =
@@ -36,7 +39,7 @@ export class Modal {
 
   /** Attaches event listeners. */
   private attach_() {
-    const card = <HTMLElement>document.querySelector('.modal .card');
+    const card = <HTMLElement>document.querySelector('.modal__card');
 
     document.body.addEventListener('keyup',
       this.bodyKeyPressHandler_.bind(this));
@@ -94,7 +97,7 @@ export class Modal {
         this.createBookmarkEntry_(entries[0].id, title, url);
       }
     })
-    .catch(() => Storage.get('__bookieId__'))
+    .catch(() => Storage.get(`__${APP_ID}__`))
     .then(item => Bookmarks.create({
       'parentId': item?.toString(),
       'title': category,
@@ -107,30 +110,6 @@ export class Modal {
         document.location.reload();
       }
     });
-
-    // Bookmarks.search({
-    //   'title': category,
-    // }, (entries) => {
-    //   if (entries) {
-    //     this.createBookmarkEntry_(entries[0].id, title, url);
-    //   } else {
-    //     Storage.get('__bookieId__', (item?: string | number) => {
-    //       Bookmarks.create({
-    //         'parentId': item?.toString(),
-    //         'title': category,
-    //       }, (result) => {
-    //         if (result) {
-    //           this.createBookmarkEntry_(result.id, title, url);
-    //         }
-    //       });
-    //     });
-    //   }
-    // });
-
-    // this.closeModalHandler_();
-
-    // // Force page to refresh to re-trigger event attachments.
-    // document.location.reload();
   }
 
   /** Stops propagation of event and ignores event. */

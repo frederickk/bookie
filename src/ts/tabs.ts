@@ -4,35 +4,24 @@
  * @url https://developers.chrome.com/extensions/tabGroups
  */
 
-type TabCallback = (tab?: chrome.tabs.Tab) => any;
+import * as Browser from 'webextension-polyfill-ts';
 
 export class Tabs {
   /**
    * Creates tab.
-   * @url
+   * @url https://developers.chrome.com/extensions/tabs#method-create
    */
-  static create(options: chrome.tabs.CreateProperties, callback?: TabCallback)
-      : Promise<chrome.tabs.Tab> {
-    return new Promise((resolve, reject) => {
-      chrome.tabs.create(options, (tab: chrome.tabs.Tab) => {
-        if (chrome.runtime.lastError) {
-          reject(`'Tabs.create ${chrome.runtime.lastError}`);
-        }
-        if (tab) {
-          if (callback) {
-            callback(tab);
-          }
-          resolve(tab);
-        } else {
-          reject('Tabs.create tab not created');
-        }
-      });
+  static create(options: Browser.Tabs.CreateCreatePropertiesType)
+      : Promise<any> {
+    return Browser.browser.tabs.create(options)
+    .catch(err => {
+      console.log(`Tabs.create error ${err}`);
     });
   }
 
   /** Creates multiple tabs. */
-  static createMultiple(options: chrome.tabs.CreateProperties[])
-      : Promise<chrome.tabs.Tab[]> {
+  static createMultiple(options: Browser.Tabs.CreateCreatePropertiesType[])
+      : Promise<any> {
     const createTabs: Promise<chrome.tabs.Tab>[] = [];
     // const tabIds: number[] = [];
     options.forEach(option => {
@@ -40,14 +29,19 @@ export class Tabs {
     });
 
     return Promise.all(createTabs)
-    .then(result => {
-      return result;
-    });
+    .catch(err => {
+      console.log(`Tabs.createMultiple error ${err}`);
+    })
   }
 
-  /** Creates tab group from array of tab ID. */
-  static group(tabIds: number[], _options?: chrome.tabGroups.UpdateProperties) {
-    const groupCreatePromise: Promise<number> = new Promise((resolve, reject) => {
+  /**
+   * Creates tab group from array of tab ID.
+   * @url https://developers.chrome.com/extensions/tabs#method-group
+   * @url https://developers.chrome.com/extensions/tabGroups#method-update
+   */
+  static group(tabIds: number[], _options?: chrome.tabGroups.UpdateProperties)
+      : Promise<any> {
+    return new Promise((resolve, reject) => {
       chrome.tabs.group({
         tabIds,
       }, (groupId: number) => {
@@ -57,17 +51,16 @@ export class Tabs {
           reject('Tabs.group tab group not created');
         }
       });
-    });
-
-    return groupCreatePromise
-    .then((groupId: number) => {
+    })
+    .then((groupId) => {
       // TODO (frederickk): Update to Manifest V3.
       // chrome.tabGroups.update(groupId, options, (group: chrome.tabGroups.TabGroup) => {
       //   return group;
       // });
       return groupId;
+    })
+    .catch(err => {
+      console.log(`Tabs.group error ${err}`);
     });
-
   }
-
 }

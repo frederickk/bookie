@@ -1,34 +1,39 @@
+import {APP_NAME, APP_ID, APP_NOTES_ID} from './ts/_defs';
+
 import {download, slugify} from './ts/utils';
 import {Bookmarks} from './ts/bookmarks';
-import {Storage} from './ts/storage';
-
-const APP_NAME = 'Bookie';
+import {Storage, StorageLocal} from './ts/storage';
 
 let bookmarkFolderId_: string;
 
-/** Fires when Bookie is installed. */
+/** Fires when app is installed. */
 chrome.runtime.onInstalled.addListener(installHandler.bind(this));
 
 /** Fires whenever a bookmark is created. */
 chrome.bookmarks.onCreated.addListener((id, bookmark) => {
-  Storage.set(`__${APP_NAME.toLowerCase()}-${id}__`, bookmark);
+  // TODO (frederickk): Investigate why these are still being saved into
+  // sync storage.
+  StorageLocal.set(`__${APP_NAME.toLowerCase()}-${id}__`, bookmark);
 });
 
 /** Fires whenever any bookmark is removed. */
 chrome.bookmarks.onRemoved.addListener((id, _removeInfo) => {
-  Storage.get(`__${APP_NAME.toLowerCase()}-${id}__`, (title) => { //bookmark) => {
-    // const title = bookmark.title;
-    if (title) {
-      Storage.get(`__${APP_NAME.toLowerCase()}-notes-${slugify(title)}__`, (result) => {
-        download(
-          result.toString(),
-          `${slugify(title)}-${APP_NAME.toLowerCase()}.md`,
-          'text/markdown'
-        );
-      });
-    }
-  });
+  let title = '';
 
+  StorageLocal.get(`__${APP_NAME.toLowerCase()}-${id}__`)
+  .then(result => {
+      title = result;
+
+      return StorageLocal.get(`__${APP_NOTES_ID}-${slugify(title)}__`)
+  })
+  .then(content => {
+    download(
+      content.toString(), // content,
+      `${slugify(title)}-${APP_NAME.toLowerCase()}.md`,
+      'text/markdown'
+    );
+  })
+  .then(() => StorageLocal.remove(`__${APP_NAME.toLowerCase()}-${id}__`));
 });
 
 /** Fires whenever any bookmarks info has changed. */
@@ -41,7 +46,7 @@ chrome.bookmarks.onMoved.addListener(bookmarkUpdateHandler.bind(this));
 chrome.bookmarks.onChildrenReordered.addListener(
     bookmarkUpdateHandler.bind(this));
 
-/** Determines if 'Bookie' bookmark folder exists, if not one is created. */
+/** Determines if app's bookmark folder exists, if not one is created. */
 function installHandler() {
   Bookmarks.search({
     'title': APP_NAME,
@@ -49,10 +54,8 @@ function installHandler() {
   .then(result => {
     if (result) {
       bookmarkFolderId_ = result[0].id;
-    } else {
-      throw Error('No valid Bookie folder ID found');
     }
-  })
+  }, () => console.log(`No valid ${APP_NAME} folder ID found`))
   .then(ready)
   .catch(() => Bookmarks.create({
     'parentId': '1', // 1 = Bookmarks Toolbar
@@ -61,10 +64,8 @@ function installHandler() {
   .then(item => {
     if (item) {
       bookmarkFolderId_ = item.id;
-    } else {
-      throw Error('Bookie folder not created 🤷‍♀️');
     }
-  })
+  }, () => console.log(`${APP_NAME} folder not created 🤷‍♀️`))
   .then(() => Bookmarks.create({
     'parentId': bookmarkFolderId_,
     'title': '!Hidden',
@@ -72,9 +73,9 @@ function installHandler() {
   .then(ready);
 }
 
-/** Completes install process and Bookie is ready to use.  */
+/** Completes install process and app is ready to use.  */
 function ready() {
-  Storage.set(`__${APP_NAME.toLowerCase()}Id__`, bookmarkFolderId_);
+  Storage.set(`__${APP_ID}__`, bookmarkFolderId_);
   saveAllFoundBookmarks();
   spawnInstalledTabs();
 }
@@ -88,7 +89,7 @@ function saveAllFoundBookmarks() {
   });
 }
 
-/** Spawn new tab with Bookie intro and help; and Chrome built-in bookmark manager */
+/** Spawn new tab with app intro and help; and Chrome built-in bookmark manager */
 function spawnInstalledTabs() {
   chrome.tabs.create({
     active: true,
@@ -109,45 +110,26 @@ function bookmarkUpdateHandler(id: string | number, info: any) {
   const titleNew = info.title;
 
   // Retrieve bookmark data from Chrome storage.
-  Storage.get(`__${APP_NAME.toLowerCase()}-${id}__`)
+  StorageLocal.get(`__${APP_NAME.toLowerCase()}-${id}__`)
   .then(result => {
     const titleOriginal = result;//.title;
 
     if (titleNew && titleNew !== titleOriginal) {
       return titleOriginal;
     } else {
-      throw Error(`Bookie Error: Unable to update ${titleOriginal} Bookie information`);
+      throw Error(`${APP_NAME} Error: Unable to update ${titleOriginal} information`);
     }
   })
   // Notes are stored in Chrome storage by their slugified title,
   // retrieve notes content based on original title.
-  .then(titleOriginal => Storage.get(
-    `__${APP_NAME.toLowerCase()}-notes-${slugify(titleOriginal)}__`)
+  .then(titleOriginal => StorageLocal.get(
+    `__${APP_NOTES_ID}-${slugify(titleOriginal)}__`)
   )
   // Create new storage data with new (changed) title, but with the
   // same content as the original.
-  .then(resultOriginal => Storage.set(
-    `__${APP_NAME.toLowerCase()}-notes-${slugify(titleNew)}__`, resultOriginal)
+  .then(resultOriginal => StorageLocal.set(
+    `__${APP_NOTES_ID}-${slugify(titleNew)}__`, resultOriginal)
   );
-
-  // // Retrieve bookmark data from Chrome storage.
-  // Storage.get(`__${APP_NAME.toLowerCase()}-${id}__`, (result) => {
-  //   const titleOriginal = result;//.title;
-
-  //   if (titleNew && titleNew !== titleOriginal) {
-  //     // Notes are stored in Chrome storage by their slugified title,
-  //     // retrieve notes content based on original title.
-  //     Storage.get(`__${APP_NAME.toLowerCase()}-notes-${slugify(titleOriginal)}__`, (resultOriginal) => {
-  //       if (resultOriginal) {
-  //         // Create new storage data with new (changed) title, but with the
-  //         // same content as the original.
-  //         Storage.set(`__${APP_NAME.toLowerCase()}-notes-${slugify(titleNew)}__`, resultOriginal);
-  //       }
-  //     });
-  //   } else {
-  //     console.error(`Bookie Error: Unable to update ${titleOriginal} Bookie information`);
-  //   }
-  // });
 }
 
 /**
@@ -156,7 +138,7 @@ function bookmarkUpdateHandler(id: string | number, info: any) {
  */
 function bookmarkToStorage(node: chrome.bookmarks.BookmarkTreeNode) {
   node.children?.forEach((child) => {
-    Storage.set(`__${APP_NAME.toLowerCase()}-${child.id}__`, child);
+    StorageLocal.set(`__${APP_NAME.toLowerCase()}-${child.id}__`, child);
 
     bookmarkToNote(child);
 
@@ -173,20 +155,13 @@ function bookmarkToStorage(node: chrome.bookmarks.BookmarkTreeNode) {
 function bookmarkToNote(node: chrome.bookmarks.BookmarkTreeNode) {
   const title = node.title;
 
-  Storage.get(`__${APP_NAME.toLowerCase()}-notes-${slugify(title)}__`)
+  StorageLocal.get(`__${APP_NOTES_ID}-${slugify(title)}__`)
   .then(result => {
     if (result === undefined || result === null || result === '') {
       throw Error(`Existing note for "${title}" not found`);
     }
   })
-  .catch(() => Storage.set(
-    `__${APP_NAME.toLowerCase()}-notes-${slugify(title)}__`, `# ${title}`)
+  .catch(() => StorageLocal.set(
+    `__${APP_NOTES_ID}-${slugify(title)}__`, `# ${title}`)
   );
-
-  // Storage.get(`__${APP_NAME.toLowerCase()}-notes-${slugify(title)}__`, (result) => {
-  //   if (result === undefined || result === null || result === '') {
-  //     Storage.set(`__${APP_NAME.toLowerCase()}-notes-${slugify(title)}__`,
-  //         `# ${title}`);
-  //   }
-  // });
 }

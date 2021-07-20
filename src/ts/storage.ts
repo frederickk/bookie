@@ -1,157 +1,166 @@
 /**
- * @fileoverview Wrapper class for Chrome Storage and LocalStorage API.
+ * @fileoverview Wrapper classes for storage APIs.
  * @url https://developers.chrome.com/extensions/storage
  * @url https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API#localStorage
  */
 
-type ResultCallback = (result?: StorageObject) => any;
-type SetResultCallback = (key: string, result?: StorageObject) => any;
+import * as Browser from 'webextension-polyfill-ts';
+import LZString from 'lz-string';
 
 export interface StorageObject {
   [key: string]: any;
 }
 
-const CHROME_STORAGE_AREA = chrome.storage.sync;
-const WINDOW_STORAGE_AREA = window.localStorage;
-
+/** Wrapper class for Chrome Storage Sync API. */
 export class Storage {
-  /** Returns all items saved in local storage. */
-  private static windowGetAll_(callback?: ResultCallback): StorageObject {
-    let items: StorageObject = {};
-    for (let key in WINDOW_STORAGE_AREA) {
-      items[key] = WINDOW_STORAGE_AREA.getItem(key);
-    }
+  protected static service_ = Browser.browser.storage.sync;
 
-    if (callback) {
-      callback(items);
-    }
-
-    return items;
+  /** Saves a key value pair into given storage service. */
+  protected static set_(service: Browser.Storage.StorageArea, key: string,
+      value: any): Promise<any> {
+    return service.set({
+      [key]: value,
+    })
+    .then(() => {
+      return {[key]: value };
+    })
+    .catch(err => `Storage.set: error saving value ${err}`);
   }
 
-  /** Removes item(s) with given key(s) from Chrome storage. */
-  private static chromeRemove_(keys: string | string[]) {
-    CHROME_STORAGE_AREA.remove(keys, () => {
-      console.log(`${keys} removed`);
-    });
-  }
-
-  /** Removes item(s) with given key(s) from local storage. */
-  private static windowRemove_(keys: string | string[]) {
-    if (keys.length) {
-      Array.from(keys).forEach((key: string) => {
-        WINDOW_STORAGE_AREA.removeItem(key);
-      });
-    } else {
-      WINDOW_STORAGE_AREA.removeItem(<string>keys);
-    }
-  }
- 
-  /** Saves a value in Chrome (or local) storage under given key. */
-  static set(key: string, item: any, callback?: SetResultCallback)
-      : Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      if (key && item) {
-        CHROME_STORAGE_AREA.set({
-          [key]: item,
-        }, () => {
-          if (callback) {
-            callback(key, item);
-          }
-          resolve([key, item]);
-        });
-      } else {
-        reject('Error (chrome.storage): No value specified');
-      }
-    });
-
-    // if (key && item) {
-    //   try {
-    //     CHROME_STORAGE_AREA.set({
-    //       [key]: item,
-    //     }, () => {
-    //       if (callback) {
-    //         callback(key, item);
-    //       }
-    //     });
-    //   } catch (err) {
-    //     WINDOW_STORAGE_AREA.setItem(key, JSON.stringify(item));
-    //   }
-    // } else {
-    //   console.warn('Error (chrome.storage): No value specified');
-
-    //   return;
-    // }
-  }
-
-  /** Retrieves a value from Chrome (or local) storage based on key. */
-  static get(key: string, callback?: (result: number | string) => any)
+  /** Retrieves a value from given storage service based on key. */
+  protected static get_(service: Browser.Storage.StorageArea, key: string | null)
       : Promise<any> {
-    const getPromise = new Promise((resolve, reject) => {
-      CHROME_STORAGE_AREA.get([key], result => {
-        if (chrome.runtime.lastError) {
-          reject(key);
-        }
-        if (result) {
-          if (callback) {
-            callback(result[key]);
-          }
-          resolve(result[key]);
-        } else {
-          reject(key);
-        }
-      });
-    });
-
-    return getPromise
-    .catch(key => {
-      return JSON.parse(WINDOW_STORAGE_AREA.getItem(key) || '');
-    });
-
-    // try {
-    //   return CHROME_STORAGE_AREA.get([key], result => {
-    //     if (callback) {
-    //       callback(result[key]);
-    //     }
-    //
-    //     return result[key];
-    //   });
-    // } catch (err) {
-    //   return JSON.parse(WINDOW_STORAGE_AREA.getItem(key) || '');
-    // }
+    return service.get([key])
+    .then(result => result[key!])
+    .catch(err => `Storage.get: error getting value ${err}`);
   }
 
-  /** Retrieves all values from Chrome (or local) storage. */
-  static getAll(callback?: ResultCallback) {
-    try {
-      return CHROME_STORAGE_AREA.get(null, result => {
-        if (callback) {
-          callback(result);
-        }
-
-        return result;
-      });
-    } catch (err) {
-      Storage.windowGetAll_(callback);
-    }
+  /** Removes a value from given storage servce based on key(s). */
+  protected static remove_(service: Browser.Storage.StorageArea,
+      keys: string | string[]): Promise<void> {
+    return service.remove(keys)
+    .then(() => {
+      console.log(`Storage.remove: ${keys} removed`);
+    })
+    .catch(err => {
+      console.log(`Storage.remove: error removing key ${err}`);
+    });
   }
 
-  /** Removes a value from Chrome (or local) storage based on key(s). */
-  static remove(keys: string | string[]) {
-    try {
-      Storage.chromeRemove_(keys);
-    } catch (err) {
-      console.warn(`Error (chrome.storage): Could not remove '${keys}'`, err);
-      Storage.windowRemove_(keys);
+  /** Saves a value in Chrome sync storage under given key. */
+  static set(key: string, value: any): Promise<any> {
+    return this.set_(Storage.service_, key, value);
+  }
+
+  /**
+   * Saves a value into chunks in Chrome sync storage under given key.
+   * @url https://stackoverflow.com/questions/67353979/algorithm-to-break-down-item-for-chrome-storage-sync/67429150#67429150
+   */
+  static setChunks(key: string, value: any): Promise<void> {
+    const str = LZString.compressToUTF16(JSON.stringify(value));
+    const len = (Storage.service_.QUOTA_BYTES_PER_ITEM / 4) - key.length - 4;
+    const numChunks = Math.ceil(str.length / len);
+    const data: any = {};
+    data[`${key}#`] = numChunks;
+
+    for (let i = 0; i < numChunks; i++) {
+      data[key + i] = str.substr(i * len, len);
     }
+
+    return Storage.service_.set(data)
+    .then(() => this.getAll())
+    .then(result => {
+      const dataKeys = Object.keys(data);
+      let keys = Object.keys(result);
+      keys = keys.filter(k => k.includes(key))
+                 .filter(val => !dataKeys.includes(val));
+
+      return this.remove(keys);
+    })
+    .catch(err => {
+      console.log(`Storage.setChunks: error storing chunks ${err}`);
+    });
+  }
+
+  /** Retrieves a value from Chrome sync storage based on key. */
+  static get(key: string): Promise<any> {
+    return this.get_(Storage.service_, key);
+  }
+
+  /**
+   * Retrieves a value as chunks from Chrome sync storage based on key.
+   * @url https://stackoverflow.com/questions/67353979/algorithm-to-break-down-item-for-chrome-storage-sync/67429150#67429150
+   */
+  static getChunks(key: string): Promise<string> {
+    let numChunks: number;
+    const keyNum = `${key}#`;
+
+    return Storage.service_.get(keyNum)
+    .then(data => {
+      numChunks = data[keyNum];
+      const keys = [];
+      for (let i = 0; i < numChunks; i++) {
+        keys[i] = key + i;
+      }
+
+      return keys;
+    })
+    .then(keys => Storage.service_.get(keys))
+    .then(data => {
+      const chunks = [];
+      for (let i = 0; i < numChunks; i++) {
+        chunks.push(data[key + i] || '');
+      }
+
+      return JSON.parse(LZString.decompressFromUTF16(chunks.join('')) || '');
+    })
+    .catch(err => {
+      console.log(`Storage.getChunks: error retrieving chunks ${err}`);
+    });
+  }
+
+  /** Retrieves all values from Chrome sync storage. */
+  static getAll(): Promise<any> {
+    return Browser.browser.storage.sync.get(null);
+  }
+
+  /** Removes a value from Chrome sync storage based on key(s). */
+  static remove(keys: string | string[]): Promise<void> {
+    return this.remove_(Storage.service_, keys);
   }
 
   /** Removes all stored values from Chrome (or local) Storage. */
-  static removeAll() {
-    try {
-      CHROME_STORAGE_AREA.clear();
-    } catch (err) {
-      WINDOW_STORAGE_AREA.clear();
-    }
+  static removeAll(): Promise<void> {
+    return Storage.service_.clear();
+  }
+}
+
+/** Wrapper class for Chrome Storage Local API. */
+export class StorageLocal extends Storage {
+  service_ = Browser.browser.storage.local;
+
+  /** Saves a value in Chrome local storage under given key. */
+  static set(key: string, value: any): Promise<any> {
+    return this.set_(StorageLocal.service_, key, value);
+  }
+
+  /** Retrieves a value from Chrome local storage based on key. */
+  static get(key: string): Promise<any> {
+    return this.get_(StorageLocal.service_, key);
+  }
+
+  /** Retrieves all values from Chrome sync storage. */
+  static getAll(): Promise<any> {
+    return Browser.browser.storage.local.get(null);
+  }
+
+  /** Removes a value from Chrome sync storage based on key(s). */
+  static remove(keys: string | string[]): Promise<void> {
+    return this.remove_(StorageLocal.service_, keys);
+  }
+
+  /** Removes all stored values from Chrome (or local) Storage. */
+  static removeAll(): Promise<void> {
+    return StorageLocal.service_.clear();
   }
 }

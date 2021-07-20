@@ -1,0 +1,345 @@
+@mixin horizontal-spacer {
+  margin: var(--spacing--top-bottom) 0 0;
+}
+
+@mixin code {
+  @include horizontal-spacer;
+
+  background-color: var(--yellow-200);
+  border-radius: var(--border-radius);
+  font-family: var(--font-family--code);
+  font-size: var(--font-size--lg);
+  line-height: var(--line-height);
+  max-width: 80ch;
+  padding: 0 .5em;
+  white-space: pre-wrap;
+}
+
+// Containers and reveal affordances.
+@mixin container-styles {
+  chip {
+    @include transition(background-color, color);
+    @include horizontal-spacer;
+
+    background-color: var(--blue-50);
+    border-radius: 1em;
+    cursor: default;
+    display: inline-block;
+    margin-right: var(--gap);
+    padding: 0 1ch;
+    vertical-align: baseline;
+
+    &:hover {
+      background-color: var(--blue-900);
+      color: var(--blue-50);
+
+      icon {
+        filter: invert(1);
+        mix-blend-mode: normal;
+      }
+    }
+
+    a:hover {
+      background-color: transparent;
+      color: var(--blue-50);
+    }
+
+    // TODO (frederickk): Is this hack? Or should I adjust the regex in
+    // markdownHelper to include the <p> within <chip>?
+    // chip p { display: inline-block; }
+    & + p {
+      display: none;
+    }
+  }
+
+  details {
+    @include transition(background-color, padding);
+    @include horizontal-spacer;
+
+    background-color: transparent;
+    border-top: 1px dotted var(--grey-900);
+    padding: 0;
+
+    & > summary {
+      @include transition(color);
+
+      cursor: pointer;
+      outline: none;
+      user-select: none;
+
+      &:first-of-type {
+        @include link-style;
+
+        list-style-type: none;
+      }
+
+      .details-marker:before {
+        content: '\25B8';
+      }
+    }
+
+    &[open] {
+      padding: 0 var(--spacing--left-right);
+
+      &:hover {
+        background-color: var(--background-color--overlay);
+        border-radius: var(--border-radius);
+      }
+
+      & > summary {
+        &:first-of-type {
+          color: var(--grey-900);
+        }
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+
+      .details-marker:before {
+        color: var(--grey-900);
+        content: '\25BE';
+      }
+    }
+  }
+
+  mark {
+    @include horizontal-spacer;
+
+    background-color: var(--background-color--overlay);
+    color: var(--grey-900);
+    border-radius: var(--border-radius);
+    display: block;
+    font-size: var(--font-size--lg);
+    line-height: var(--line-height);
+    padding: var(--spacing--left-right);
+  }
+}
+
+// Unordered and (eventually) ordered lists.
+@mixin list-styles {
+  ul {
+    @include horizontal-spacer;
+
+    box-sizing: border-box;
+    list-style: initial;
+    padding: 0 1.2em;
+
+    li,
+    p {
+      margin-top: calc(var(--spacing--top-bottom) / 2);
+    }
+  }
+}
+
+// Images (img), icons, and (eventually) frames.
+@mixin media-styles {
+  icon,
+  .icon {
+    @include dark-theme {
+      filter: invert(1);
+    }
+
+    align-self: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: inline-block;
+    height: 16px;
+    margin-right: 1ch;
+    mix-blend-mode: var(--mix-blend-mode);
+    transform: translateY(-2px);
+    vertical-align: middle;
+    width: 16px;
+
+    &--doc,
+    &--docs {
+      background-image: url('./images/document.png');
+    }
+
+    &--email,
+    &--emails,
+    &--mail,
+    &--mails {
+      background-image: url('./images/email.png');
+    }
+
+    &--figma {
+      background-image: url('./images/figma.png');
+    }
+
+    &--file,
+    &--files {
+      background-image: url('./images/file.png');
+    }
+
+    &--image,
+    &--images {
+      background-image: url('./images/image.png');
+    }
+
+    &--pdf,
+    &--pdfs {
+      background-image: url('./images/pdf.png');
+    }
+
+    &--sheet,
+    &--sheets {
+      background-image: url('./images/spreadsheet.png');
+    }
+
+    &--site,
+    &--sites,
+    &--web,
+    &--website {
+      background-image: url('./images/site.png');
+    }
+
+    &--slide,
+    &--slides {
+      background-image: url('./images/presentation.png');
+    }
+
+    &--sketch {
+      background-image: url('./images/sketch.png');
+    }
+
+    &--video,
+    &--videos,
+    &--film,
+    &--films {
+      background-image: url('./images/video.png');
+    }
+
+    &--archive,
+    &--archives,
+    &--zip,
+    &--zips {
+      background-image: url('./images/zip.png');
+    }
+  }
+
+  img {
+    @include horizontal-spacer;
+    @include transition(filter);
+
+    width: 100%;
+    filter: grayscale(1);
+    mix-blend-mode: var(--mix-blend-mode);
+
+    &:hover {
+      filter: grayscale(0);
+      mix-blend-mode: normal;
+    }
+  }
+}
+
+// Structure and organizational.
+@mixin structure-styles {
+  hr {
+    border-top: 1px solid var(--grey-900);
+    border-bottom: 0;
+    margin: calc(var(--spacing--top-bottom) * 4) 0 var(--spacing--top-bottom);
+  }
+
+  table {
+    @include horizontal-spacer;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+    max-width: 100%;
+    width: 100%;
+
+    tbody > tr:nth-child(odd) > td,
+    tbody > tr:nth-child(odd) > th {
+      background-color: var(--background-color--overlay);
+    }
+
+    thead > tr > th,
+    tbody > tr > th,
+    tfoot > tr > th,
+    thead > tr > td,
+    tbody > tr > td,
+    tfoot > tr > td {
+      padding: 1rem;
+      vertical-align: top;
+      border-top: 1px solid var(--grey-900);
+    }
+  }
+}
+
+// Typograpphy hierarchy.
+@mixin typography-styles {
+  code {
+    @include code;
+
+    display: inline-block;
+    padding: 0 .5ch;
+  }
+
+  // three levels of hierarchy
+  h1 {
+    @include horizontal-spacer;
+
+    font-size: var(--font-size--xl);
+    font-weight: 400;
+    line-height: inherit;
+    // margin: 0;
+  }
+
+  h2,
+  h3 {
+    @include horizontal-spacer;
+
+    font-size: var(--font-size--lg);
+    font-weight: 500;
+    line-height: inherit;
+    // margin: 0;
+  }
+
+  h4,
+  h5,
+  h6,
+  p {
+    @include horizontal-spacer;
+
+    font-size: var(--font-size--lg);
+    font-weight: 400;
+    line-height: var(--line-height);
+    // margin: 0;
+  }
+
+  p {
+    b,
+    em,
+    i,
+    strong {
+      font-style: normal;
+      font-weight: 700;
+    }
+  }
+
+  pre {
+    margin: 0;
+
+    code {
+      @include code;
+
+      display: block;
+      padding: 0 var(--spacing--left-right);
+    }
+
+  }
+}
+
+@mixin html-styles {
+  @include container-styles;
+  @include media-styles;
+  @include list-styles;
+  @include structure-styles;
+  @include typography-styles;
+
+  ::-webkit-details-marker {
+    display: none;
+  }
+}

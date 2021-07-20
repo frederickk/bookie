@@ -6,5 +6,29 @@
   "extName": {
     "description": "Extension name",
     "message": "Bookie"
+  },
+  "extVersion": {
+    "description": "Extension version",
+    "message": "0.1.10"
+  },
+  "menuAdd": {
+    "description": "Menu edit add button",
+    "message": "Add item to category"
+  },
+  "menuEdit": {
+    "description": "Menu edit remove button",
+    "message": "Remove item from category"
+  },
+  "menuNote": {
+    "description": "Menu edit notes button",
+    "message": "Add/edit notes"
+  },
+  "menuOrganize": {
+    "description": "Menu edit organize bookmarks button",
+    "message": "Organize bookmarks"
+  },
+  "menuOpenTabs": {
+    "description": "Menu edit open tabs button",
+    "message": "Open bookmarks in tab group"
   }
 }

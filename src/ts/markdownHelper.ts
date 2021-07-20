@@ -16,26 +16,41 @@ const md = new MarkdownIt({
   typographer: true,
 });
 
+/** Class to instantiate markdown translation. */
 export class MardownHelper {
   tags = [
-    'doc',    // ::: doc
-    'docs',   // ::: docs
-    'file',   // ::: file
-    'film',   // ::: film
-    'image',  // ::: image
-    'pdf',    // ::: pdf
-    'slide',  // ::: slide
-    'slides', // ::: slides
-    'sketch', // ::: sketch
-    'sheet',  // ::: sheet
-    'sheets', // ::: sheets
-    'site',   // ::: site
-    'sites',  // ::: sites
-    'video',  // ::: video
-    'web',    // ::: web
-    'zip',    // ::: zip
+    'archive',  // ::: archive
+    'archives', // ::: archives
+    'doc',      // ::: doc
+    'docs',     // ::: docs
+    'email',    // ::: email
+    'emails',   // ::: email
+    'figma',    // ::: figma
+    'file',     // ::: file
+    'files',    // ::: files
+    'film',     // ::: film
+    'films',    // ::: films
+    'image',    // ::: image
+    'images',   // ::: images
+    'mail',     // ::: mail
+    'mails',    // ::: mails
+    'pdf',      // ::: pdf
+    'pdfs',     // ::: pdfs
+    'slide',    // ::: slide
+    'slides',   // ::: slides
+    'sketch',   // ::: sketch
+    'sheet',    // ::: sheet
+    'sheets',   // ::: sheets
+    'site',     // ::: site
+    'sites',    // ::: sites
+    'video',    // ::: video
+    'videos',   // ::: videos
+    'web',      // ::: web
+    'website',  // ::: website
+    'websites', // ::: websites
+    'zip',      // ::: zip
   ];
-  private tagCSS_ = 'notes__icon';
+  // private tagCSS_ = 'notes__icon';
 
   constructor() {
     this.init_();
@@ -74,18 +89,24 @@ export class MardownHelper {
 
   /** Configure custom tags and appropriate HTML rendering markup. */
   private configureCustomTags_() {
-    this.tags.forEach((item) => {
-      const re = new RegExp(`^${item}\\s+(.*)$`, 'gi');
+    this.tags.forEach(tag => {
+      const re = new RegExp(`^${tag}\\s+(.*)$`, 'gi');
 
-      md.use(mdContainer, item, {
+      md.use(mdContainer, tag, {
         validate: (params: string) => {
           return params.trim().match(re);
         },
         render: (tokens: any, index: number) => {
           const m = tokens[index].info.trim().match(re);
           if (tokens[index].nesting === 1) {
-            m[0] = m[0].replace(item, '').trim();
-            return `<span class="${this.tagCSS_} ${this.tagCSS_}--${item}"></span>${md.render(m[0])}\n`;
+            m[0] = m[0].replace(tag, '').trim();
+            // TODO (frederickk): Is there a more efficient way to do this?
+            let html = md.render(m[0]);
+            const re = new RegExp(/<\s*p[^>]*>(.*?)<\s*\/\s*p>/, 'gi');
+            const label = re.exec(html)?.pop();
+            html = html.replace(label || '', '');
+
+            return `<chip><icon class="icon icon--${tag}"></icon>${label}</chip>${html}\n`;
           } else {
             return '\n';
           }

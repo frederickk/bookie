@@ -51,13 +51,16 @@ module.exports = {
     background: [
       path.join(__dirname, './src/background'),
     ],
-    popup: [
-      path.join(__dirname, './src/popup'),
-      path.join(__dirname, './src/popup.scss'),
+    intro: [
+      path.join(__dirname, './src/intro'),
     ],
     notes: [
       path.join(__dirname, './src/notes'),
       path.join(__dirname, './src/notes.scss'),
+    ],
+    popup: [
+      path.join(__dirname, './src/popup'),
+      path.join(__dirname, './src/popup.scss'),
     ],
   },
   devServer: {

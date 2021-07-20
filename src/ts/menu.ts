@@ -1,16 +1,18 @@
-import {removeElement, toggleMultiple} from './utils';
+import {APP_NAME, APP_ID, FORM_CSS, MENU_CSS, MODAL_CSS} from './_defs';
+
 import {Bookmarks} from './bookmarks';
+import {browser} from 'webextension-polyfill-ts';
 import {MenuItem} from './menuItem';
+import {removeElement} from './utils';
 import {Storage} from './storage';
 import {Tabs} from './tabs';
 
-const CSS_PREFIX = 'menu__';
-
+/** Class to build menu within action popup. */
 export class Menu {
   private menuEl_ = <HTMLElement>document.querySelector(
-      `#${CSS_PREFIX}container`);
+      `#${MENU_CSS}__container`);
 
-  private menuEls_?: NodeListOf<HTMLElement>;
+      private menuEls_?: NodeListOf<HTMLElement>;
   private editEls_?: NodeListOf<HTMLElement>;
   private addEls_?: NodeListOf<HTMLElement>;
   private noteEls_?: NodeListOf<HTMLElement>;
@@ -25,15 +27,15 @@ export class Menu {
 
   private init_() {
     Bookmarks.search({
-      'title': 'Bookie',
+      'title': `${APP_NAME}`,
     })
     .then(result => {
       this.bookmarkFolderId_ = result[0].id;
       // Is this a terrible idea?
-      Storage.set(`__bookieId__`, this.bookmarkFolderId_);
+      Storage.set(`__${APP_ID}__`, this.bookmarkFolderId_);
       this.populate_();
     }, () => {
-      window.alert(`🤷‍♀️ Uh-oh it seems there's no "Bookie" folder to be found.`);
+      window.alert(`🤷‍♀️ Uh-oh it seems there's no "${APP_NAME}" folder to be found.`);
     });
   }
 
@@ -61,7 +63,7 @@ export class Menu {
       entries: chrome.bookmarks.BookmarkTreeNode[], bookmarkId: string) {
     entries.forEach((item) => {
       if(!item.title.startsWith('!')) {
-        MenuItem.addEntry(
+        MenuItem.initItem(
           this.menuEl_,
           category,
           item.title,
@@ -72,21 +74,21 @@ export class Menu {
     });
   }
 
-  /** Retrieves delete checkbox elements. */
-  private getBookmarkDeleteCheckboxes_(
+  /** Retrieves remove checkbox elements. */
+  private getBookmarkRemoveCheckboxes_(
       parent: Document | HTMLElement = document)
       : NodeListOf<HTMLInputElement> {
-    return parent?.querySelectorAll(`.${CSS_PREFIX}checkbox`);
+    return parent?.querySelectorAll(`.${MENU_CSS}__checkbox`);
   }
 
   /** Attaches event listeners. */
   private attach_() {
-    this.menuEls_ = document.querySelectorAll(`.${CSS_PREFIX}item`);
-    this.addEls_ = document.querySelectorAll(`.${CSS_PREFIX}add`);
-    this.editEls_ = document.querySelectorAll(`.${CSS_PREFIX}edit`);
-    this.noteEls_ = document.querySelectorAll(`.${CSS_PREFIX}note`);
-    this.organizeEls_ = document.querySelectorAll(`.${CSS_PREFIX}organize`);
-    this.openTabsEls_ = document.querySelectorAll(`.${CSS_PREFIX}open-tabs`);
+    this.menuEls_ = document.querySelectorAll(`.${MENU_CSS}__item`);
+    this.addEls_ = document.querySelectorAll(`.${MENU_CSS}__add`);
+    this.editEls_ = document.querySelectorAll(`.${MENU_CSS}__edit`);
+    this.noteEls_ = document.querySelectorAll(`.${MENU_CSS}__note`);
+    this.organizeEls_ = document.querySelectorAll(`.${MENU_CSS}__organize`);
+    this.openTabsEls_ = document.querySelectorAll(`.${MENU_CSS}__open-tabs`);
 
     this.menuEls_.forEach((item) => {
       item.addEventListener('click', this.menuClickHandler_.bind(this));
@@ -110,12 +112,12 @@ export class Menu {
     });
 
     document.body.addEventListener('click',
-        this.hideBookmarkDeleteCheckboxes_.bind(this));
+        this.hideBookmarkRemoveCheckboxes_.bind(this));
 
-    const deleteCheckboxes = this.getBookmarkDeleteCheckboxes_();
-    deleteCheckboxes.forEach((checkbox) => {
+    const removeCheckboxes = this.getBookmarkRemoveCheckboxes_();
+    removeCheckboxes.forEach((checkbox) => {
       checkbox.addEventListener('click',
-        this.bookmarkDeleteHandler_.bind(this));
+        this.bookmarkRemoveHandler_.bind(this));
     });
   }
 
@@ -135,15 +137,16 @@ export class Menu {
     const urlInputEl = <HTMLInputElement>document.querySelector('#url');
 
     const titleEl = target.parentNode?.parentNode?.querySelector(
-        `.${CSS_PREFIX}title`);
+        `.${MENU_CSS}__title`);
     if (titleEl?.textContent) {
       categoryInputEl.value = titleEl.textContent.trim();
     }
 
-    chrome.tabs.query({
+    browser.tabs.query({
       currentWindow: true,
       active: true,
-    }, (tabs) => {
+    })
+    .then(tabs => {
       const tab = tabs[0];
 
       if (tab.title && tab.url) {
@@ -152,7 +155,7 @@ export class Menu {
       }
     });
 
-    document.querySelector('#modal')?.classList.toggle('modal--active');
+    document.querySelector(`#${MODAL_CSS}`)?.classList.toggle(`${MODAL_CSS}--active`);
     event.stopPropagation();
 
     return;
@@ -163,10 +166,9 @@ export class Menu {
     const target = <HTMLElement>event.target;
     const parent = target.parentElement?.parentElement?.parentElement;
 
-    const deleteCheckboxes = this.getBookmarkDeleteCheckboxes_(parent!);
-    deleteCheckboxes.forEach((checkbox) => {
-      toggleMultiple(checkbox,
-        `form__input checkbox checkbox--delete ${CSS_PREFIX}checkbox--visible`);
+    const removeCheckboxes = this.getBookmarkRemoveCheckboxes_(parent!);
+    removeCheckboxes.forEach((checkbox) => {
+      checkbox.classList.toggle(`${FORM_CSS}--hidden`);
     });
 
     event.stopPropagation();
@@ -179,24 +181,21 @@ export class Menu {
     const target = <HTMLElement>event.target;
     const id = target.dataset.bookmarkId;
 
-    Storage.get('__windowId__', (result) => {
-      // TODO (frederickk): This could be cleaner, perhaps instead of closing
-      // whatever window is open, just change the URL of the Bookie tab.
-      if (result) {
-        chrome.windows.remove(parseInt(result.toString()));
-      }
-
-      chrome.windows.create({
-        focused: true,
-        left: window.screen.width / 2,
-        top: 0,
-        type: 'popup',
-        url: `notes.html?bookmarkId=${id}`,
-        width: window.screen.width / 2,
-      }, (window) => {
-        Storage.set('__windowId__', window?.id);
-        Storage.set('__windowSessionId__', window?.sessionId);
-      });
+    Storage.get('__windowId__')
+    // TODO (frederickk): This could be cleaner, perhaps instead of closing
+    // whatever window is open, just change the URL of the app tab.
+    .then(result => browser.windows.remove(parseInt(result.toString())))
+    .catch(() => browser.windows.create({
+      focused: true,
+      left: window.screen.width / 2,
+      top: 0,
+      type: 'popup',
+      url: `notes.html?bookmarkId=${id}`,
+      width: window.screen.width / 2,
+    }))
+    .then(window => {
+      Storage.set('__windowId__', window?.id);
+      Storage.set('__windowSessionId__', window?.sessionId);
     });
 
     event.stopPropagation();
@@ -255,21 +254,16 @@ export class Menu {
     }
   }
 
-  /** Hides bookmark delete checkboxes. */
-  private hideBookmarkDeleteCheckboxes_() {
-    const deleteCheckboxes = this.getBookmarkDeleteCheckboxes_();
-    deleteCheckboxes.forEach((checkbox) => {
-      checkbox.classList.remove(
-        'form__input',
-        'checkbox',
-        'checkbox--delete',
-        `${CSS_PREFIX}checkbox--visible`
-      );
+  /** Hides bookmark remove checkboxes. */
+  private hideBookmarkRemoveCheckboxes_() {
+    const removeCheckboxes = this.getBookmarkRemoveCheckboxes_();
+    removeCheckboxes.forEach((checkbox) => {
+      checkbox.classList.add(`${FORM_CSS}--hidden`);
     });
   }
 
-  /** Deletes bookmark and removes corresponding menu item. */
-  private bookmarkDeleteHandler_(event: Event) {
+  /** Removes bookmark and removes corresponding menu item. */
+  private bookmarkRemoveHandler_(event: Event) {
     const target = <HTMLInputElement>event.target;
     const parent = <HTMLElement>target.parentElement!;
     const grandParent = <HTMLElement>parent?.parentNode!;

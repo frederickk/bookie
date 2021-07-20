@@ -1,3 +1,5 @@
+import {APP_NAME, APP_ID, APP_NOTES_ID, NOTES_CSS} from './ts/_defs';
+
 import {getUrlParams, slugify, download} from './ts/utils';
 import {Bookmarks} from './ts/bookmarks';
 import {MardownHelper} from './ts/markdownHelper';
@@ -6,17 +8,16 @@ import {Storage} from './ts/storage';
 import {stripHtml} from 'string-strip-html';
 import toMarkdown from 'to-markdown';
 
-const CSS_PREFIX = 'notes__';
-
+/** Class to create notes view. */
 export class Notes {
   private bookmarkId_ = getUrlParams()['bookmarkId'];
   private md_ = new MardownHelper();
 
-  private notesContainerEl_ = <HTMLElement>document.querySelector(`#${CSS_PREFIX}container`);
-  private notesItemEl_ = <HTMLElement>document.querySelector(`.${CSS_PREFIX}item`);
-  private markdownEl_ = <HTMLInputElement>document.querySelector(`.${CSS_PREFIX}content--markdown`);
-  private htmlEl_ = <HTMLElement>document.querySelector(`.${CSS_PREFIX}content--html`);
-  private saveContainerEl_ = <HTMLElement>document.querySelector(`.${CSS_PREFIX}save-container`);
+  private notesContainerEl_ = <HTMLElement>document.querySelector(`#${NOTES_CSS}__container`);
+  private contentContainerEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__content-container`);
+  private markdownEl_ = <HTMLInputElement>document.querySelector(`.${NOTES_CSS}__content--markdown`);
+  private htmlEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__content--html`);
+  private saveContainerEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__save-container`);
 
   private categorySelect_!: MDCSelect;
   private saveButton_ = <HTMLInputElement>document.querySelector('#save');
@@ -37,15 +38,18 @@ export class Notes {
     this.updateRenderedNote_();
 
     if (this.bookmarkId_) {
-      this.notesItemEl_.dataset.bookmarkId = this.bookmarkId_;
+      this.contentContainerEl_.dataset.bookmarkId = this.bookmarkId_;
 
       Bookmarks.get(this.bookmarkId_)
       .then(items => this.setCategoryTitle_(items[0].title))
-      .then(() => Storage.get('__bookieId__'))
+      .then(() => Storage.get(`__${APP_ID}__`))
       .then(result => Bookmarks.get(result))
       .then(bookmarks => this.populateCategorySelect_(bookmarks))
       .then(() => this.initCategorySelect_())
-      .then(() => this.updateRenderedNote_());
+      .then(() => this.updateRenderedNote_())
+      .catch(err => {
+        console.log(`Notes.init error ${err}`);
+      });
     }
   }
 
@@ -55,7 +59,7 @@ export class Notes {
     // menu list is popuplated. Perhaps this is because I'm using vanilla
     // JS or more likely because I don't know what I'm doing.
     this.categorySelect_ = new MDCSelect(
-      <HTMLElement>document.querySelector(`.${CSS_PREFIX}select`));
+      <HTMLElement>document.querySelector(`.${NOTES_CSS}__select`));
 
     this.categorySelect_.listen('MDCSelect:change',
       this.categorySelectChangeHandler_.bind(this));
@@ -65,7 +69,7 @@ export class Notes {
   private setCategoryTitle_(title: string) {
     this.categoryTitle_ = title;
 
-    const titleDiv = <HTMLElement>document.querySelector(`.${CSS_PREFIX}header`);
+    const titleDiv = <HTMLElement>document.querySelector(`.${NOTES_CSS}__header`);
     titleDiv.id = slugify(this.categoryTitle_);
   }
 
@@ -87,7 +91,7 @@ export class Notes {
       selectedTextLabelEl.innerText = title;
       el.classList.add('mdc-list-item--selected');
       el.setAttribute('aria-checked', 'true');
-      document.title = `Bookie — ${title}`;
+      document.title = `${APP_NAME} — ${title}`;
     }
 
     if (bookmarkId) {
@@ -104,7 +108,7 @@ export class Notes {
     items.forEach((entries) => {
       entries.children?.forEach((entryList) => {
         // '!' prefix is how end-users can keep a category (folder) from
-        // appearting within Bookie's UI.
+        // appearting within app's UI.
         if (!entryList.title.startsWith('!')) {
           const option = this.createCategoryListElement_(
             entryList.title, entryList.id
@@ -117,11 +121,13 @@ export class Notes {
 
   /** Retrieves markdown content from storage. */
   private loadSavedNote_(id: string): Promise<void> {
-    return Storage.get(`__bookie-notes-${id}__`)
+    return Storage.getChunks(`__${APP_NOTES_ID}-${id}__`)
     .then(result => {
-      console.log(`__bookie-notes-${id}__`, result);
       this.markdownEl_.value = result?.toString();
       this.renderMarkdownToHtml_(this.markdownEl_.value);
+    })
+    .catch(err => {
+      console.log(`Notes.loadSavedNote ${err}`);
     });
   }
 
@@ -138,7 +144,7 @@ export class Notes {
           noteAsMarkdown === undefined) {
         this.loadSavedNote_(noteId);
       } else {
-        Storage.set(`__bookie-notes-${noteId}__`, noteAsMarkdown);
+        Storage.setChunks(`__${APP_NOTES_ID}-${noteId}__`, noteAsMarkdown);
       }
     }
 
@@ -256,20 +262,19 @@ export class Notes {
    */
   private markdownBlurHandler_() {
     this.updateRenderedNote_();
-    this.htmlEl_.classList.remove(`${CSS_PREFIX}content--hidden`);
-    this.markdownEl_.classList.add(`${CSS_PREFIX}content--hidden`);
-    this.saveContainerEl_.classList?.add(`${CSS_PREFIX}content--hidden`);
+    this.htmlEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
+    this.markdownEl_.classList.add(`${NOTES_CSS}__content--hidden`);
+    this.saveContainerEl_?.classList?.add(`${NOTES_CSS}__content--hidden`);
   }
 
   /** Handles paste data, transforming captured HTML into markdown. */
   private pasteDataHandler_(txt: string, data: DataTransferItemList) {
     let markdown = txt;
 
-    Array.from(data).every((item: DataTransferItem) =>  {
+    Array.from(data).every((item: DataTransferItem) => {
       if (item.type.includes('html')) {
         item.getAsString((html: string) => {
           markdown = this.renderHTMLToMarkdown_(html);
-          console.log('markdown', markdown);
           document.execCommand('insertText', false, markdown);
         });
       } else {
@@ -315,12 +320,11 @@ export class Notes {
    */
   private htmlClickHandler_(event: Event) {
     if (this.shiftPressed_) {
-      this.htmlEl_.classList.add(`${CSS_PREFIX}content--hidden`);
-      this.markdownEl_.classList.remove(`${CSS_PREFIX}content--hidden`);
+      this.htmlEl_.classList.add(`${NOTES_CSS}__content--hidden`);
+      this.markdownEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
       this.markdownEl_.focus();
-      this.saveContainerEl_.classList?.remove(`${CSS_PREFIX}content--hidden`);
-
-      this.notesContainerEl_.addEventListener('click', this.markdownBlurHandler_.bind(this));
+      this.saveContainerEl_?.classList?.remove(`${NOTES_CSS}__content--hidden`);
+      this.notesContainerEl_?.addEventListener('click', this.markdownBlurHandler_.bind(this));
     }
 
     // TODO (frederickk): MDCSelect doesn't close when HTML clicked, because
@@ -341,7 +345,7 @@ export class Notes {
 
     download(
       this.markdownEl_.value,
-      `${slugify(this.categoryTitle_)}-bookie.md`,
+      `${slugify(this.categoryTitle_)}-${APP_NAME.toLowerCase()}.md`,
       'text/markdown'
     );
 
@@ -349,7 +353,7 @@ export class Notes {
     // to care at the moment.
     // download(
     //   htmlToRtf.convertHtmlToRtf(this.html_.innerHTML),
-    //   `${this.bookmarkId_}-bookie.rtf`,
+    //   `${this.bookmarkId_}-${APP_NAME.toLowerCase()}.rtf`,
     //   'application/rtf'
     // );
 

@@ -1,41 +1,67 @@
 @mixin remove-line($color, $x: 0, $y: .35em) {
   box-shadow:
-    $y ($x + -2px) 0 $color,
-    $y ($x + -4px) 0 $color,
-    $y ($x + -6px) 0 $color,
-    $y ($x + -8px) 0 $color;
+    $y ($x * -1) 0 $color,
+    $y ($x * -2) 0 $color,
+    $y ($x * -3) 0 $color,
+    $y ($x * -4) 0 $color;
 }
 
-.form__input {
-  font-family: var(--typeface-body);
-  font-size: var(--typeface-size--md);
-  font-weight: 500;
+.form {
+  &--hidden {
+    display: none;
+    margin: inherit;
+    opacity: 0;
+    width: 0;
 
-  &::placeholder {
-    font-size: var(--typeface-size--md);
+    & + label {
+      &:before,
+      &:after {
+        display: none !important;
+        opacity: 0;
+        width: 0;
+      }
+    }
   }
 
-  & + label {
-    @include mq-min($screen-s) {
-      padding: 4px 16px 0;
+  &--visible {
+    // display: none;
+    margin: inherit;
+    opacity: 1;
+    visibility: visible;
+    width: auto;
+  }
+
+  &__input {
+    font-family: var(--font-family--body);
+    font-size: var(--font-size--md);
+    font-weight: 500;
+
+    &::placeholder {
+      font-size: var(--font-size--md);
     }
 
-    color: inherit;
-    display: block;
-    font-family: var(--typeface-body);
-    font-size: inherit;
-    height: inherit;
-    padding: 4px 8px 0;
-    position: relative;
+    & + label {
+      @include mq-min($screen-s) {
+        padding: 4px 16px 0;
+      }
+
+      color: inherit;
+      display: inline-block;
+      font-family: var(--font-family--body);
+      font-size: inherit;
+      height: inherit;
+      padding: 4px 8px 0;
+      position: relative;
+    }
   }
 
-  &.button {
+  &__button {
     @include transition(background-color);
 
     background-color: var(--white);
-    border: 1px solid var(--google-grey-300);
-    border-radius: 4px;
-    color: var(--google-blue-600);
+    border: 1px solid var(--grey-300);
+    border-radius: var(--border-radius);
+    color: var(--blue-600);
     cursor: pointer;
     height: 36px;
     margin: 0 6px;
@@ -46,13 +72,8 @@
     }
 
     &:hover {
-      @include dark-theme() {
-        background-color: var(--google-blue-300);
-        color: var(--google-grey-900);
-      }
-
-      background-color: var(--google-blue-50);
-      color: var(--google-blue-900);
+      background-color: var(--blue-50);
+      color: var(--blue-900);
     }
 
     &--text {
@@ -61,139 +82,130 @@
     }
   }
 
-
-  &.text {
+  &__text {
+    @include transition(border);
     @include mq-min($screen-s) {
       height: 56px;
       padding: 0 16px;
     }
-    @include transition(border);
 
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     height: 36px;
     outline: 0;
     padding: 0 8px;
 
     &:active,
     &:focus {
-      border-color: var(--google-blue-600);
+      border-color: var(--blue-600);
       border-width: 2px;
     }
 
     &:hover {
-      border-color: var(--google-grey-700);
+      border-color: var(--grey-700);
+    }
+
+    &--error {
+      background-color: var(--red-50);
+      border-color: var(--red-600);
+      color: var(--red-600);
     }
 
     &--filled {
-      @include dark-theme() {
-        background-color: rgba($google-blue-300, .24);
-      }
-
-      background-color: var(--google-grey-100);
+      background-color: var(--grey-100);
       border: 0;
-      border-bottom: 1px solid var(--google-blue-600);
+      border-bottom: 1px solid var(--blue-600);
       border-radius: 0;
     }
 
     &--outline {
       background-color: var(--white);
-      border: 1px solid var(--google-blue-600);
-    }
-
-    &--error {
-      background-color: var(--google-red-50);
-      border-color: var(--google-red-600);
-      color: var(--google-red-600);
+      border: 1px solid var(--blue-600);
     }
   }
 
-  &.checkbox {
+  &__checkbox {
     cursor: pointer;
     height: auto;
     opacity: 0;
     position: absolute;
     // width: auto;
 
-    & + label {
-      cursor: pointer;
-      padding: 0;
-      pointer-events: none;
-      position: relative;
-    }
-
-    & + label:before {
-      @include transition(background-color);
-
-      background-color: var(--google-blue-600);
-      box-shadow: none;
-      content: '';
-      display: inline-block;
-      height: 1em;
-      margin-right: .5em;
-      vertical-align: middle;
-      width: 1em;
-    }
-
-    & + label:after {
-      content: '';
-      position: absolute;
-    }
-
-    &:hover + label:before {
-      background-color: var(--google-blue-900);
-    }
-
-    &:checked + label:before {
-      background-color: var(--google-blue-900);
+    &:checked + label,
+    &:hover + label {
+      &:before {
+        background-color: var(--blue-900);
+      }
     }
 
     &:disabled + label {
       color: var(--white);
       cursor: auto;
+
+      &:before {
+        background-color: var(--grey-600);
+      }
     }
 
-    &:disabled + label:before {
-      background-color: var(--google-grey-600);
+    & + label {
+      cursor: pointer;
+      overflow: hidden;
+      padding: 0;
+      pointer-events: none;
+      position: relative;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      width: 100%;
+
+      &:before {
+        @include transition(background-color);
+
+        background-color: var(--blue-600);
+        box-shadow: none;
+        content: '';
+        display: inline-block;
+        height: 1em;
+        margin-right: .5em;
+        vertical-align: middle;
+        width: 1em;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+      }
     }
 
-    &--delete {
-      & + label:before {
-        background-color: var(--white);
-        border: 2px solid var(--google-red-600);
-        border-radius: 50%;
+    &--remove {
+      &:checked + label,
+      &:hover + label {
+        &:before {
+          border: 2px solid var(--red-900);
+          background-color: var(--red-900);
+        }
+
+        &:after {
+          @include remove-line(var(--white), .165em);
+        }
       }
 
-      & + label:after {
-        @include remove-line(var(--google-red-600), -.25px);
+      & + label{
+        &:before {
+          background-color: var(--white);
+          border: .15em solid var(--red-600);
+          border-radius: 50%;
+        }
 
-        height: 2px;
-        left: .2em;
-        top: .2em;
-        transform: rotate(90deg);
-        width: 2px;
-      }
+        &:after {
+          @include remove-line(var(--red-600), .165em);
 
-      &:hover + label:before {
-        border: 2px solid var(--google-red-900);
-        background-color: var(--google-red-900);
-      }
-
-      &:hover + label:after {
-        @include remove-line(var(--white), -.25px);
-      }
-
-      // &:focus + label:before {
-      //   box-shadow: 0 0 0 3px rgba($black, .12);
-      // }
-
-      &:checked + label:before {
-        border: 2px solid var(--google-red-900);
-        background-color: var(--google-red-900);
-      }
-
-      &:checked + label:after {
-        @include remove-line(var(--white), -.25px);
+          height: .25em;
+          left: .15em;
+          top: .33em;
+          transform: rotate(90deg);
+          width: .15em;
+        }
       }
     }
   }
 }
+

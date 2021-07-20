@@ -13,13 +13,27 @@
   width: 100%;
 
   &--active {
-    background-color: var(--black-trans);
+    background-color: var(--black-overlay);
     opacity: 1;
     pointer-events: auto;
+  }
+
+  &__card {
+    align-items: flex-end;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+    justify-content: space-between;
+    padding: var(--spacing--left-right);
+    width: 200px;
   }
 
   &__item {
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
 }

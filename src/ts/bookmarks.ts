@@ -1,7 +1,4 @@
-/**
- * @fileoverview Wrapper class for Chrome Bookmarks API.
- * @url https://developers.chrome.com/extensions/bookmarks
- */
+//  import {browser} from 'webextension-polyfill-ts';
 
 type TreeNodesCallback = (tree?: chrome.bookmarks.BookmarkTreeNode[]) => any;
 type TreeNodeCallback = (tree?: chrome.bookmarks.BookmarkTreeNode) => any;
@@ -18,7 +15,7 @@ export class Bookmarks {
     return new Promise((resolve, reject) => {
       chrome.bookmarks.create(bookmark, (tree) => {
         if (chrome.runtime.lastError) {
-          reject(`'Bookmarks.create ${chrome.runtime.lastError}`);
+          reject(`'Bookmarks.create ${chrome.runtime.lastError.message}`);
         }
         if (tree) {
           if (callback) {
@@ -41,7 +38,7 @@ export class Bookmarks {
     return new Promise((resolve, reject) => {
       chrome.bookmarks.getSubTree(id, result => {
         if (chrome.runtime.lastError) {
-          reject(`'Bookmarks.get ${chrome.runtime.lastError}`);
+          reject(`'Bookmarks.get ${chrome.runtime.lastError.message}`);
         }
         if (result) {
           if (callback) {
@@ -64,7 +61,7 @@ export class Bookmarks {
     return new Promise((resolve, reject) => {
       chrome.bookmarks.getTree(result => {
         if (chrome.runtime.lastError) {
-          reject(`'Bookmarks.getAll ${chrome.runtime.lastError}`);
+          reject(`'Bookmarks.getAll ${chrome.runtime.lastError.message}`);
         }
         if (result) {
           if (callback) {
@@ -83,39 +80,23 @@ export class Bookmarks {
    * @url https://developers.chrome.com/extensions/bookmarks#method-remove
    */
   static remove(title?: string): Promise<any> {
-    const removePromise = new Promise((resolve, reject) => {
-      if (title) {
-        chrome.bookmarks.remove(title, () => {
-          if (chrome.runtime.lastError) {
-            reject(`'Bookmarks.remove ${chrome.runtime.lastError}`);
-          } else {
-            resolve(title);
-          }
-        });
-      } else {
-        reject('Bookmarks.remove invalid title or ID');
-      }
-    });
-
-    // return removePromise.then((_id) => {
-    // }).catch((str) => {
-    //   chrome.bookmarks.search({
-    //     'title': str,
-    //   }, (result) => {
-    //     if (result.length != 0) {
-    //       chrome.bookmarks.remove(result[0].id);
-    //     }
-    //   });
-    // });
-
-    return removePromise
-    .then(id => Bookmarks.search({
-      title: id,
-    }))
-    .then(result => {
-      if (result.length != 0) {
-        chrome.bookmarks.remove(result[0].id);
-      }
+    return new Promise<chrome.bookmarks.BookmarkTreeNode[]>((resolve, reject) => {
+      chrome.bookmarks.search(title || '', (result) => {
+        if (chrome.runtime.lastError) {
+          reject(`Bookmarks.remove ${chrome.runtime.lastError.message}`);
+        }
+        resolve(result);
+      })
+    })
+    .then((bookmarks) => {
+      bookmarks.forEach((bookmark: chrome.bookmarks.BookmarkTreeNode) => {
+        if (bookmark.title === title) {
+          chrome.bookmarks.remove(bookmark.id);
+        }
+      });
+    })
+    .catch(() => {
+      console.log('Bookmarks.remove no matching ookmark found');
     });
   }
 
