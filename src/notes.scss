@@ -195,13 +195,13 @@
     &--bookie {
       @include transition(background-image);
 
-      background-image: url('./images/icon-inactive-48.png');
+      background-image: url('./images/icon-48.png');
       height: 24px;
       margin-right: 0;
       width: 24px;
 
       &:hover {
-        background-image: url('./images/icon-48.png');
+        background-image: url('./images/icon-inactive-48.png');
       }
     }
   }

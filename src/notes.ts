@@ -6,6 +6,7 @@ import {MardownHelper} from './ts/markdownHelper';
 import {MDCSelect} from '@material/select';
 import {Storage} from './ts/storage';
 import {stripHtml} from 'string-strip-html';
+// import Mousetrap from 'mousetrap';
 import toMarkdown from 'to-markdown';
 
 /** Class to create notes view. */
@@ -26,7 +27,7 @@ export class Notes {
 
   private categoryTitle_: string = '';
   private shiftPressed_ = false;
-  // private copyAsRichText_ = false;
+  private copyAsRichText_ = false;
 
   constructor() {
     this.init_();
@@ -180,8 +181,8 @@ export class Notes {
         this.markdownBlurHandler_.bind(this));
     this.markdownEl_.addEventListener('paste',
         this.pasteHandler_.bind(this));
-    // this.markdownEl_.addEventListener('copy',
-    //     this.copyHandler_.bind(this));
+    this.markdownEl_.addEventListener('copy',
+        this.copyHandler_.bind(this));
 
     this.htmlEl_.addEventListener('click',
         this.htmlClickHandler_.bind(this));
@@ -191,6 +192,12 @@ export class Notes {
     this.exportButton_?.addEventListener('click',
         this.exportClickHandler_.bind(this));
 
+    // TODO (frederickk): Trigger copy as richtext.
+    // Mousetrap.bind(['command+alt+c', 'ctrl+alt+c'], () => {
+    //   this.copyAsRichText_ = true;
+    //   const copyEvent = new ClipboardEvent('copy');
+    //   document.dispatchEvent(copyEvent);
+    // });
   }
 
   /**
@@ -206,21 +213,17 @@ export class Notes {
    * Handles keypresses globally.
    * @listens window~event:keydown
    */
-   private windowKeydownHandler_(event: KeyboardEvent) {
+  private windowKeydownHandler_(event: KeyboardEvent) {
     if (event.shiftKey) {
       this.shiftPressed_ = true;
     }
-    // TODO (frederickk): Trigger copy as richtext.
-    // if (event.altKey && event.metaKey && event.key === 'c') {
-    //   this.copyAsRichText_ = true;
-    // }
   }
 
   /**
    * Handles release of keyps globally.
    * @listens window~event:keyup
    */
-   private windowKeyupHandler_() {
+  private windowKeyupHandler_() {
     this.shiftPressed_ = false;
   }
 
@@ -268,19 +271,23 @@ export class Notes {
   }
 
   /** Handles paste data, transforming captured HTML into markdown. */
-  private pasteDataHandler_(txt: string, data: DataTransferItemList) {
+  private pasteDataHandler_(txt: string, _data: DataTransferItemList) {
     let markdown = txt;
 
-    Array.from(data).every((item: DataTransferItem) => {
-      if (item.type.includes('html')) {
-        item.getAsString((html: string) => {
-          markdown = this.renderHTMLToMarkdown_(html);
-          document.execCommand('insertText', false, markdown);
-        });
-      } else {
-        document.execCommand('insertText', false, markdown);
-      }
-    });
+    markdown = this.renderHTMLToMarkdown_(markdown);
+    document.execCommand('insertText', false, markdown);
+
+    // Array.from(data).every((item: DataTransferItem) => {
+    //   console.log('TYPE', item.type);
+    //   if (item.type.includes('html')) {
+    //     item.getAsString((html: string) => {
+    //       markdown = this.renderHTMLToMarkdown_(html);
+    //       document.execCommand('insertText', false, markdown);
+    //     });
+    //   } else {
+    //     document.execCommand('insertText', false, markdown);
+    //   }
+    // });
   }
 
   /**
@@ -293,26 +300,28 @@ export class Notes {
     event.preventDefault();
     event.stopPropagation();
 
-    this.pasteDataHandler_(paste.getData('text'), paste.items);
+    // this.pasteDataHandler_(paste.getData('text'), paste.items);
+    this.pasteDataHandler_(paste.getData('text/html'), paste.items);
 
     return false;
   }
 
-  // /**
-  //  * Handles copy event within markdown editor/preview.
-  //  * @listens markdownEl~event:copy
-  //  */
-  //  private copyHandler_(event: ClipboardEvent) {
-  //    if (this.copyAsRichText_) {
-  //     this.copyAsRichText_ = false;
-  //     const copy: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
-  //     const selection = document.getSelection();
-  //     const richtext = this.md_.render(selection?.toString());
+  /**
+   * Handles copy event within markdown editor/preview.
+   * @listens markdownEl~event:copy
+   */
+   private copyHandler_(event: ClipboardEvent) {
+     if (this.copyAsRichText_) {
+      this.copyAsRichText_ = false;
+      const copy: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
+      const selection = document.getSelection();
+      const richtext = this.md_.render(selection?.toString());
 
-  //     copy.setData('text/html', richtext);
-  //     event.preventDefault();
-  //   }
-  // }
+      console.log('SELECTION', selection);
+      copy.setData('text/html', richtext);
+      event.preventDefault();
+    }
+  }
 
   /**
    * Hides container of HTML content and reveals Mardown container.
