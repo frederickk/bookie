@@ -19,7 +19,7 @@
 @mixin container-styles {
   chip {
     @include transition(background-color, color);
-    // @include horizontal-spacer;
+    @include horizontal-spacer;
 
     background-color: var(--blue-50);
     border-radius: 1em;

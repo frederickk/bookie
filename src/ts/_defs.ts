@@ -9,6 +9,9 @@ export const APP_ID = `${APP_NAME.toLowerCase()}Id`;
 /** Prefix identifier for app's notes' key in storage. */
 export const APP_NOTES_ID = `${APP_NAME.toLowerCase()}-notes`;
 
+/** Class prefix for butter bar. */
+export const BUTTER_BAR_CSS = 'butter-bar';
+
 /** Class prefix for form elements. */
 export const FORM_CSS = 'form';
 

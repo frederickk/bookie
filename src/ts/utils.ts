@@ -25,6 +25,13 @@ export const checkValidURL = (str: string): boolean => {
   return !!pattern.test(str);
 };
 
+/** Delays given function by given time (ms). */
+export const delay = (_t: number, _v = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve.bind(null, _v), _t)
+  });
+};
+
 /** Programatically downloads a given piece of data. */
 export const download = (data: number | string, filename: string,
     mimetype: string) => {

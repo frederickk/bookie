@@ -112,6 +112,7 @@ $screen-xl: '1680px';
     --yellow-50: #{rgba($yellow-50, .2)};
     --yellow-200: #{rgba($yellow-200, .2)}; // --grey-700
     --yellow-300: #{rgba($yellow-100, .3)};
+    --yellow-900: #{$yellow-50};
 
     --grey-50: #{$grey-800};
     --grey-300: #{$grey-700};

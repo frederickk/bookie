@@ -6,6 +6,7 @@
 
 @import 'sass/_defs';
 @import 'sass/_base';
+@import 'sass/butter-bar';
 @import 'sass/forms';
 @import 'sass/intro';
 @import 'sass/notes-html';
@@ -114,11 +115,12 @@
     font-weight: 400;
     gap: 0;
     grid-template-areas:
+      'butter-bar'
       'header'
       'content'
       'footer';
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
     left: 0;
     line-height: var(--line-height);
     position: absolute;
@@ -139,7 +141,7 @@
     }
 
     &--hidden {
-      display: none;
+      display: none !important;
       visibility: hidden;
       z-index: -1;
     }

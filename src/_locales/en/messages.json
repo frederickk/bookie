@@ -9,7 +9,7 @@
   },
   "extVersion": {
     "description": "Extension version",
-    "message": "0.1.10"
+    "message": "0.1.11"
   },
   "menuAdd": {
     "description": "Menu edit add button",
@@ -30,5 +30,13 @@
   "menuOpenTabs": {
     "description": "Menu edit open tabs button",
     "message": "Open bookmarks in tab group"
+  },
+  "errorMsgGeneric": {
+    "description": "Generic error message",
+    "message": "🤦‍♀️ Uh-oh! Something went wrong. Download your note to be safe."
+  },
+  "successMsgGeneric": {
+    "description": "Generic success message",
+    "message": "🙌 Huzzah! Success!."
   }
 }

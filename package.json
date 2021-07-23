@@ -1,6 +1,6 @@
 {
   "name": "bookie",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Bookie is a Chrome Extension that makes a curated set of bookmarks and additional notes accessible within the Chrome menubar.",
   "main": "popup.html",
   "repository": {

@@ -2,6 +2,7 @@ import {APP_NAME, APP_ID, APP_NOTES_ID, NOTES_CSS} from './ts/_defs';
 
 import {getUrlParams, slugify, download} from './ts/utils';
 import {Bookmarks} from './ts/bookmarks';
+import {ButterBar} from './ts/butter-bar';
 import {MardownHelper} from './ts/markdownHelper';
 import {MDCSelect} from '@material/select';
 import {Storage} from './ts/storage';
@@ -25,6 +26,9 @@ export class Notes {
   private exportButton_ = <HTMLInputElement>document.querySelector('#export');
   // private notesId_ = getUrlParams()['notesId'];
 
+  private eventError_ = new Event('notes:error');
+  private eventSuccess_ = new Event('notes:success');
+
   private categoryTitle_: string = '';
   private shiftPressed_ = false;
   private copyAsRichText_ = false;
@@ -32,6 +36,8 @@ export class Notes {
   constructor() {
     this.init_();
     this.attach_();
+
+    new ButterBar();
   }
 
   /** Loads and renders markdown content and populate UI. */
@@ -50,6 +56,7 @@ export class Notes {
       .then(() => this.updateRenderedNote_())
       .catch(err => {
         console.log(`Notes.init error ${err}`);
+        window.dispatchEvent(this.eventError_);
       });
     }
   }
@@ -121,14 +128,16 @@ export class Notes {
   }
 
   /** Retrieves markdown content from storage. */
-  private loadSavedNote_(id: string): Promise<void> {
+  private loadSavedNote_(id: string): Promise<any> {
     return Storage.getChunks(`__${APP_NOTES_ID}-${id}__`)
     .then(result => {
       this.markdownEl_.value = result?.toString();
       this.renderMarkdownToHtml_(this.markdownEl_.value);
     })
+    .then(() => window.dispatchEvent(this.eventSuccess_))
     .catch(err => {
       console.log(`Notes.loadSavedNote ${err}`);
+      window.dispatchEvent(this.eventError_);
     });
   }
 
@@ -145,7 +154,9 @@ export class Notes {
           noteAsMarkdown === undefined) {
         this.loadSavedNote_(noteId);
       } else {
-        Storage.setChunks(`__${APP_NOTES_ID}-${noteId}__`, noteAsMarkdown);
+        Storage.setChunks(`__${APP_NOTES_ID}-${noteId}__`, noteAsMarkdown)
+        .then(() => window.dispatchEvent(this.eventSuccess_))
+        .catch(() => window.dispatchEvent(this.eventError_));
       }
     }
 
@@ -274,6 +285,8 @@ export class Notes {
   private pasteDataHandler_(txt: string, _data: DataTransferItemList) {
     let markdown = txt;
 
+    console.log('PASTE', txt);
+
     markdown = this.renderHTMLToMarkdown_(markdown);
     document.execCommand('insertText', false, markdown);
 
@@ -296,12 +309,16 @@ export class Notes {
    */
   private pasteHandler_(event: ClipboardEvent) {
     const paste: DataTransfer = (event.clipboardData || (<any>window).clipboardData);
+    const str = paste.getData('text/html') !== ''
+      ? paste.getData('text/html')
+      : paste.getData('text');
 
     event.preventDefault();
     event.stopPropagation();
 
-    // this.pasteDataHandler_(paste.getData('text'), paste.items);
-    this.pasteDataHandler_(paste.getData('text/html'), paste.items);
+    console.log('PASTE', str);
+
+    this.pasteDataHandler_(str, paste.items);
 
     return false;
   }
