@@ -16,6 +16,7 @@ export class ButterBar {
   /** Attaches event listeners. */
   private attach_() {
     window.addEventListener('notes:error', this.errorHandler_.bind(this));
+    (<any>window).addEventListener('notes:save', this.saveHandler_.bind(this));
     window.addEventListener('notes:success', this.successHandler_.bind(this));
   }
 
@@ -38,6 +39,14 @@ export class ButterBar {
   /** Sets error message of butter bar. */
   private errorHandler_() {
     this.setMessage_(browser.i18n.getMessage('errorMsgGeneric'));
+  }
+
+  /** Sets successful save message of butter bar. */
+  private saveHandler_(event: CustomEvent) {
+    let msg = browser.i18n.getMessage('saveMsgGeneric');
+    msg = msg.replace('%FILE%', event.detail);
+
+    this.setMessage_(msg);
   }
 
   /** Sets success message of butter bar. */

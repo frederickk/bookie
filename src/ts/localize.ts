@@ -7,24 +7,38 @@ import {querySelectorAllDeep} from 'query-selector-shadow-dom';
  */
  export class Localize {
   constructor() {
-    const elems: HTMLElement[] = querySelectorAllDeep('[data-localize]');
+    const els: HTMLElement[] = querySelectorAllDeep('[data-localize]:not(input)');
+    const inputEls = <HTMLInputElement[]>querySelectorAllDeep('input[data-localize]');
 
-    for (let elem of Array.from(elems)) {
-      const content = elem.getAttribute('data-localize')?.toString() || '';
-      this.replaceI18n_(elem, content);
+    for (let elem of Array.from(els)) {
+      this.replaceInnerHTML_(elem, this.getI18nId_(elem));
+    }
+    for (let elem of Array.from(inputEls)) {
+      this.replaceValue_(elem, this.getI18nId_(elem));
     }
   }
 
-  /** Replaces strings with localized copy defined in _locales/<...>. */
-  private replaceI18n_(elem: HTMLElement, content: string) {
-    const msg = content.replace(/__MSG_(.+)_/g, (_match, $1) => {
+  /** Retrieves localization id string from "data-localize" property. */
+  private getI18nId_(elem: Element): string {
+    return elem.getAttribute('data-localize')?.toString() || '';
+  }
+
+  /** Returns localized string defined in _locales/<...>. */
+  private getI18nString_(content: string) {
+    return content.replace(/__MSG_(.+)_/g, (_match, $1) => {
       return $1
         ? browser.i18n.getMessage($1)
         : '';
     });
+  }
 
-    if (msg !== content && msg !== '') {
-      elem.innerHTML = msg;
-    }
+  /** Replaces innerHTML with localized string defined in _locales/<...>. */
+  private replaceInnerHTML_(elem: HTMLElement, content: string) {
+    elem.innerHTML = this.getI18nString_(content);
+  }
+
+  /** Replaces value with localized string defined in _locales/<...>. */
+  private replaceValue_(elem: HTMLInputElement, content: string) {
+    elem.value = this.getI18nString_(content);
   }
 }

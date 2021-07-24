@@ -9,7 +9,7 @@
   },
   "extVersion": {
     "description": "Extension version",
-    "message": "0.1.12"
+    "message": "0.1.13"
   },
   "menuAdd": {
     "description": "Menu edit add button",
@@ -34,6 +34,10 @@
   "errorMsgGeneric": {
     "description": "Generic error message",
     "message": "🤦‍♀️ Uh-oh! Etwas ist schiefgelaufen. Auf Nummer sicher gehen und lade deine Notiz herunter."
+  },
+  "saveMsgGeneric": {
+    "description": "Generic success message",
+    "message": "💾 \"%FILE%\" wurde gespeichert!"
   },
   "successMsgGeneric": {
     "description": "Generic success message",
@@ -82,5 +86,13 @@
   "notesEmptyState": {
     "description": "Default empty note message",
     "message": "[Die Welt liegt Ihnen zu Füßen 🌍](./intro.html#markdown)"
+  },
+  "notesExportButton": {
+    "description": "Export button text",
+    "message": "Markdown exportieren"
+  },
+  "notesSaveButton": {
+    "description": "Save button text",
+    "message": "Speichern"
   }
 }

@@ -9,7 +9,7 @@
   },
   "extVersion": {
     "description": "Extension version",
-    "message": "0.1.12"
+    "message": "0.1.13"
   },
   "menuAdd": {
     "description": "Menu edit add button",
@@ -34,6 +34,10 @@
   "errorMsgGeneric": {
     "description": "Generic error message",
     "message": "🤦‍♀️ Uh-oh! Something went wrong. Download your note to be safe."
+  },
+  "saveMsgGeneric": {
+    "description": "Generic success message",
+    "message": "💾 \"%FILE%\" Saved!"
   },
   "successMsgGeneric": {
     "description": "Generic success message",
@@ -82,5 +86,13 @@
   "notesEmptyState": {
     "description": "Default empty note message",
     "message": "[The world is your oyster 🦪](./intro.html#markdown)"
+  },
+  "notesExportButton": {
+    "description": "Export button text",
+    "message": "Export Markdown"
+  },
+  "notesSaveButton": {
+    "description": "Save button text",
+    "message": "Save"
   }
 }

@@ -1,15 +1,15 @@
 {#
   Creates an input button.
  #}
-{% macro button(id='', value='', classNames='') %}
-  <input id="{{ id }}" name="{{ id }}" type="button" class="form__input form__button {{ classNames -}}" value="{{ value }}">
+{% macro button(id='', i18nId='', classNames='') %}
+  <input id="{{ id }}" name="{{ id }}" type="button" class="form__input form__button {{ classNames -}}" data-localize="__MSG_{{ i18nId }}_" value="{{ i18nId }}">
 {% endmacro %}
 
 {#
   Creates a text input button.
  #}
-{% macro button_text(id='', value='') %}
-  {{ button(id, value, 'button--text') }}
+{% macro button_text(id='', i18nId='') %}
+  {{ button(id, i18nId, 'button--text') }}
 {% endmacro %}
 
 {#

@@ -1,4 +1,4 @@
-import {APP_NAME, APP_ID, FORM_CSS, MENU_CSS, MODAL_CSS} from './_defs';
+import {APP_NAME, APP_ID, FORM_CSS, MENU_CSS, MODAL_CSS, MAX_WINDOW_WIDTH} from './_defs';
 
 import {Bookmarks} from './bookmarks';
 import {MenuItem} from './menuItem';
@@ -12,7 +12,7 @@ export class Menu {
   private menuEl_ = <HTMLElement>document.querySelector(
       `#${MENU_CSS}__container`);
 
-      private menuEls_?: NodeListOf<HTMLElement>;
+  private menuEls_?: NodeListOf<HTMLElement>;
   private editEls_?: NodeListOf<HTMLElement>;
   private addEls_?: NodeListOf<HTMLElement>;
   private noteEls_?: NodeListOf<HTMLElement>;
@@ -184,14 +184,14 @@ export class Menu {
     Storage.get('__windowId__')
     // TODO (frederickk): This could be cleaner, perhaps instead of closing
     // whatever window is open, just change the URL of the app tab.
-    .then(result => Browser.browser.windows.remove(parseInt(result.toString())))
+    .then(result => Browser.browser.windows.remove(parseInt(result?.toString())))
     .catch(() => Browser.browser.windows.create({
       focused: true,
-      left: window.screen.width / 2,
+      left: MAX_WINDOW_WIDTH + 100,
       top: 0,
       type: 'popup',
       url: `notes.html?bookmarkId=${id}`,
-      width: window.screen.width / 2,
+      width: MAX_WINDOW_WIDTH - 100,
     }))
     .then(window => {
       Storage.set('__windowId__', window?.id);

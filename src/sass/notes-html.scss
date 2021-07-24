@@ -281,6 +281,7 @@
   h1 {
     @include horizontal-spacer;
 
+    font-family: var(--font-family--display);
     font-size: var(--font-size--xl);
     font-weight: 400;
     line-height: inherit;

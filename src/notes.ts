@@ -1,8 +1,9 @@
 import {APP_NAME, APP_ID, APP_NOTES_ID, NOTES_CSS} from './ts/_defs';
 
-import {getUrlParams, slugify, download} from './ts/utils';
+import {delay, getUrlParams, slugify, download} from './ts/utils';
 import {Bookmarks} from './ts/bookmarks';
 import {ButterBar} from './ts/butter-bar';
+import {Localize} from './ts/localize';
 import {MardownHelper} from './ts/markdownHelper';
 import {MDCSelect} from '@material/select';
 import {Storage} from './ts/storage';
@@ -39,6 +40,7 @@ export class Notes {
     this.attach_();
 
     new ButterBar();
+    new Localize();
   }
 
   /** Loads and renders markdown content and populate UI. */
@@ -166,7 +168,12 @@ export class Notes {
         this.loadSavedNote_(noteId);
       } else {
         Storage.setChunks(`__${APP_NOTES_ID}-${noteId}__`, noteAsMarkdown)
-        .then(() => window.dispatchEvent(this.eventSuccess_))
+        .then(() => {
+          const saveEvent = new CustomEvent('notes:save', {
+            detail: noteId,
+          });
+          window.dispatchEvent(saveEvent);
+        })
         .catch(() => window.dispatchEvent(this.eventError_));
       }
     }
@@ -193,20 +200,20 @@ export class Notes {
     window.addEventListener('keyup',
         this.windowKeyupHandler_.bind(this));
 
-    this.contentMarkdownEl_.addEventListener('keydown',
+    this.contentMarkdownEl_?.addEventListener('keydown',
         this.markdownKeydownHandler_.bind(this));
-    this.contentMarkdownEl_.addEventListener('keyup',
+    this.contentMarkdownEl_?.addEventListener('keyup',
         this.markdownKeyupHandler_.bind(this));
-    this.contentMarkdownEl_.addEventListener('click',
+    this.contentMarkdownEl_?.addEventListener('click',
         this.markdownClickHandler_.bind(this));
-    this.contentMarkdownEl_.addEventListener('blur',
+    this.contentMarkdownEl_?.addEventListener('blur',
         this.markdownBlurHandler_.bind(this));
-    this.contentMarkdownEl_.addEventListener('paste',
+    this.contentMarkdownEl_?.addEventListener('paste',
         this.pasteHandler_.bind(this));
-    this.contentMarkdownEl_.addEventListener('copy',
+    this.contentMarkdownEl_?.addEventListener('copy',
         this.copyHandler_.bind(this));
 
-    this.contentAsHtmlEl_.addEventListener('click',
+    this.contentAsHtmlEl_?.addEventListener('click',
         this.htmlClickHandler_.bind(this));
 
     this.saveButton_?.addEventListener('click',
@@ -289,7 +296,13 @@ export class Notes {
     this.updateRenderedNote_();
     this.contentAsHtmlEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
     this.contentMarkdownEl_.classList.add(`${NOTES_CSS}__content--hidden`);
-    this.saveContainerEl_?.classList?.add(`${NOTES_CSS}__content--hidden`);
+
+    // TODO (frederickk): Hack to allow for click on buttons with save container
+    // to register. Necessary?
+    delay(100)
+    .then(() => {
+      this.saveContainerEl_?.classList?.add(`${NOTES_CSS}__content--hidden`);
+    });
   }
 
   /** Handles paste data, transforming captured HTML into markdown. */
@@ -388,7 +401,7 @@ export class Notes {
     //   'application/rtf'
     // );
 
-    return;
+    // return;
   }
 }
 

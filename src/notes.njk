@@ -25,10 +25,8 @@
     {% call macros.markdown_container() %}{% endcall %}
 
     <footer class="notes__save-container notes__content--hidden">
-      <form action="" name="save">
-        {{ macros.button_text('save', 'Save') }}
-        {{ macros.button_text('export', 'Export Markdown') }}
-      </form>
+      {{ macros.button_text('save', 'notesSaveButton') }}
+      {{ macros.button_text('export', 'notesExportButton') }}
     </footer>
 
     <div class="butter-bar butter-bar--hidden">Note saved!</div>

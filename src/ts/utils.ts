@@ -35,7 +35,7 @@ export const delay = (_t: number, _v = () => {}) => {
 /** Programatically downloads a given piece of data. */
 export const download = (data: number | string, filename: string,
     mimetype: string) => {
-  const file = new Blob([data.toString()], {
+  const file = new Blob([data?.toString()], {
     type: mimetype,
   });
 

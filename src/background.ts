@@ -1,4 +1,4 @@
-import {APP_NAME, APP_ID, APP_NOTES_ID} from './ts/_defs';
+import {APP_NAME, APP_ID, APP_NOTES_ID, HIDDEN_FLAG} from './ts/_defs';
 
 import {download, slugify} from './ts/utils';
 import {Bookmarks} from './ts/bookmarks';
@@ -29,7 +29,7 @@ Browser.browser.bookmarks.onRemoved.addListener((id, _removeInfo) => {
   })
   .then(content => {
     download(
-      content.toString(), // content,
+      content?.toString(), // content,
       `${slugify(title)}-${APP_NAME.toLowerCase()}.md`,
       'text/markdown'
     );
@@ -52,16 +52,14 @@ chrome.bookmarks.onChildrenReordered.addListener(
 
 /** Determines if app's bookmark folder exists, if not one is created. */
 function installHandler() {
+  const hiddenFolderName = `${HIDDEN_FLAG}Hidden`;
+
   Bookmarks.search({
     'title': APP_NAME,
   })
   .then(result => {
-    if (result) {
-      bookmarkFolderId_ = result[0].id;
-    }
-  }, () => console.log(`No valid ${APP_NAME} folder ID found`))
-  .then(ready)
-  .catch(() => Bookmarks.create({
+    bookmarkFolderId_ = result[0].id;
+  }, () => Bookmarks.create({
     'parentId': '1', // 1 = Bookmarks Toolbar
     'title': APP_NAME,
   }))
@@ -69,11 +67,18 @@ function installHandler() {
     if (item) {
       bookmarkFolderId_ = item.id;
     }
-  }, () => console.log(`${APP_NAME} folder not created 🤷‍♀️`))
-  .then(() => Bookmarks.create({
-    'parentId': bookmarkFolderId_,
-    'title': '!Hidden',
+  })
+  .then(() => Bookmarks.search({
+    'title': hiddenFolderName,
   }))
+  .then(result => {
+    if (result.length === 0) {
+      Bookmarks.create({
+        'parentId': result[0].id,
+        'title': hiddenFolderName,
+      });
+    }
+  })
   .then(ready);
 }
 

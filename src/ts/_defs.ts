@@ -23,3 +23,12 @@ export const MODAL_CSS = 'modal';
 
 /** Class prefix for notes elements. */
 export const NOTES_CSS = 'notes';
+
+/** Maximum width for notes window. */
+export const MAX_WINDOW_WIDTH = window.screen.width / 2;
+
+/** Minimum width for notes window. */
+export const MIN_WINDOW_WIDTH = 450;
+
+/** Flag to denote content that should be hidden. */
+export const HIDDEN_FLAG = '!';
