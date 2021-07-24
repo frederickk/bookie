@@ -21,8 +21,8 @@
     </div>
 
     <div id="overview">
-      <span class="intro__title" name="bookmarks">Overview</span>
-      <p>Access Bookie via the popoup menu. Bookmarks can be added, removed, oragnized, and notes can be added.</p>
+      <span class="intro__title" name="bookmarks" data-localize="__MSG_introTitleOverview_"></span>
+      <p data-localize="__MSG_introDescOverview_"></p>
 
       <div class="intro__table">
         <div class="intro__table-cell">
@@ -51,27 +51,27 @@
     </div>
 
     <div id="bookmarks">
-      <span class="intro__title" name="bookmarks">Manage bookmarks</span>
-      <p>Bookmarks can be added easily within the menu, and will automatically populate with info from the current tab (e.g. title and URL).</p>
+      <span class="intro__title" name="bookmarks" data-localize="__MSG_introTitleBookmarks_"></span>
+      <p data-localize="__MSG_introDescBookmarks_"></p>
       <img src="./images/screenshot-add.jpg" class="intro__img" alt="Bookie add modal">
 
-      <p>Removing bookmarks can also be handled inline.</p>
+      <p data-localize="__MSG_introDescBookmarksRemove_"></p>
       <img src="./images/screenshot-remove.jpg" class="intro__img" alt="Bookie inline remove">
 
-      <p>The bookmarks within Bookie are simply <a href="chrome://bookmarks" target="_blank">Chrome bookmarks</a> stored in a folder called “Bookie”. You can manage the entries for Bookie within the menu itself (via edit and add options) or simply through the native Chrome bookmarks UI.</p>
+      <p data-localize="__MSG_introDescBookmarksManage_"></p>
       <img src="./images/screenshot-organize.jpg" class="intro__img" alt="Chrome bookmarks manager">
     </div>
 
     <div id="notes">
-      <span class="intro__title" name="notes">Notes</span>
-      <p>You can also add notes to accompany each category, these notes are stored within local storage and are only accessible by you. But they will sync across all devices if you're logged into Chrome.</p>
+      <span class="intro__title" name="notes" data-localize="__MSG_introTitleNotes_"></span>
+      <p data-localize="__MSG_introDescNotes_"></p>
 
       <img src="./images/screenshot-note.jpg" class="intro__img" alt="Notes menu">
     </div>
 
     <div id="markdown">
-      <span class="intro__title" name="markdown">Markdown</span>
-      <p>Formatting of notes is handled with markdown, simply <code>shift</code>+click on the text box exposes the underlying markdown. Bookie's notes support markdown's syntax as well as some additional custom tags.</p>
+      <span class="intro__title" name="markdown" data-localize="__MSG_introTitleMarkdown_"></span>
+      <p data-localize="__MSG_introDescMarkdown_"></p>
       <p>&nbsp;</p>
       <div class="notes notes__container">
         {% call macros.markdown_container() -%}

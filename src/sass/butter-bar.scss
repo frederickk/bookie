@@ -12,6 +12,7 @@
   justify-content: center;
   margin: 1ch;
   padding: 1ch;
+  user-select: none;
 
   &--error {
     background-color: var(--red-50);

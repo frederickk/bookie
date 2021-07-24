@@ -1,4 +1,6 @@
 import {BUTTER_BAR_CSS} from './_defs';
+
+import {browser} from 'webextension-polyfill-ts';
 import {delay} from './utils';
 
 const DELAY_MS = 3000;
@@ -35,11 +37,11 @@ export class ButterBar {
 
   /** Sets error message of butter bar. */
   private errorHandler_() {
-    this.setMessage_(chrome.i18n.getMessage('errorMsgGeneric'));
+    this.setMessage_(browser.i18n.getMessage('errorMsgGeneric'));
   }
 
   /** Sets success message of butter bar. */
   private successHandler_() {
-    this.setMessage_(chrome.i18n.getMessage('successMsgGeneric'));
+    this.setMessage_(browser.i18n.getMessage('successMsgGeneric'));
   }
 }

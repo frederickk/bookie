@@ -3,21 +3,22 @@ import {APP_NAME, APP_ID, APP_NOTES_ID} from './ts/_defs';
 import {download, slugify} from './ts/utils';
 import {Bookmarks} from './ts/bookmarks';
 import {Storage, StorageLocal} from './ts/storage';
+import * as Browser from 'webextension-polyfill-ts';
 
 let bookmarkFolderId_: string;
 
 /** Fires when app is installed. */
-chrome.runtime.onInstalled.addListener(installHandler.bind(this));
+Browser.browser.runtime.onInstalled.addListener(installHandler.bind(this));
 
 /** Fires whenever a bookmark is created. */
-chrome.bookmarks.onCreated.addListener((id, bookmark) => {
+Browser.browser.bookmarks.onCreated.addListener((id, bookmark) => {
   // TODO (frederickk): Investigate why these are still being saved into
   // sync storage.
   StorageLocal.set(`__${APP_NAME.toLowerCase()}-${id}__`, bookmark);
 });
 
 /** Fires whenever any bookmark is removed. */
-chrome.bookmarks.onRemoved.addListener((id, _removeInfo) => {
+Browser.browser.bookmarks.onRemoved.addListener((id, _removeInfo) => {
   let title = '';
 
   StorageLocal.get(`__${APP_NAME.toLowerCase()}-${id}__`)
@@ -37,12 +38,15 @@ chrome.bookmarks.onRemoved.addListener((id, _removeInfo) => {
 });
 
 /** Fires whenever any bookmarks info has changed. */
-chrome.bookmarks.onChanged.addListener(bookmarkUpdateHandler.bind(this));
+Browser.browser.bookmarks.onChanged.addListener(bookmarkUpdateHandler.bind(this));
 
 /** Fires whenever any bookmark is moved. */
-chrome.bookmarks.onMoved.addListener(bookmarkUpdateHandler.bind(this));
+Browser.browser.bookmarks.onMoved.addListener(bookmarkUpdateHandler.bind(this));
 
-/** Fires whenever any bookmark's child is moved. */
+/**
+ * Fires whenever any bookmark's child is moved.
+ * TODO (frederickk): Does this event not exist on all Webkit plaforms?
+ */
 chrome.bookmarks.onChildrenReordered.addListener(
     bookmarkUpdateHandler.bind(this));
 
@@ -91,12 +95,13 @@ function saveAllFoundBookmarks() {
 
 /** Spawn new tab with app intro and help; and Chrome built-in bookmark manager */
 function spawnInstalledTabs() {
-  chrome.tabs.create({
+  Browser.browser.tabs.create({
     active: true,
     url: './intro.html',
   });
-  chrome.tabs.create({
+  Browser.browser.tabs.create({
     active: false,
+    // TODO (frederickk): Need to make this URL pattern browser agnostic.
     url: `chrome://bookmarks/?id=${bookmarkFolderId_}`,
   });
 }
@@ -132,11 +137,8 @@ function bookmarkUpdateHandler(id: string | number, info: any) {
   );
 }
 
-/**
- * [bookmarkToStorage description]
- * @param  node  chrome.bookmarks entry item.
- */
-function bookmarkToStorage(node: chrome.bookmarks.BookmarkTreeNode) {
+/** [bookmarkToStorage description] */
+function bookmarkToStorage(node: Browser.Bookmarks.BookmarkTreeNode) {
   node.children?.forEach((child) => {
     StorageLocal.set(`__${APP_NAME.toLowerCase()}-${child.id}__`, child);
 
@@ -148,11 +150,8 @@ function bookmarkToStorage(node: chrome.bookmarks.BookmarkTreeNode) {
   });
 }
 
-/**
- * [bookmarkToNote description]
- * @param  node  chrome.bookmarks entry item.
- */
-function bookmarkToNote(node: chrome.bookmarks.BookmarkTreeNode) {
+/** [bookmarkToNote description] */
+function bookmarkToNote(node: Browser.Bookmarks.BookmarkTreeNode) {
   const title = node.title;
 
   StorageLocal.get(`__${APP_NOTES_ID}-${slugify(title)}__`)

@@ -22,7 +22,7 @@ export class Tabs {
   /** Creates multiple tabs. */
   static createMultiple(options: Browser.Tabs.CreateCreatePropertiesType[])
       : Promise<any> {
-    const createTabs: Promise<chrome.tabs.Tab>[] = [];
+    const createTabs: Promise<Browser.Tabs.Tab>[] = [];
     // const tabIds: number[] = [];
     options.forEach(option => {
       createTabs.push(Tabs.create(option));
@@ -38,6 +38,8 @@ export class Tabs {
    * Creates tab group from array of tab ID.
    * @url https://developers.chrome.com/extensions/tabs#method-group
    * @url https://developers.chrome.com/extensions/tabGroups#method-update
+   * TODO (frederickk): Latest Chrome API features (e.g. Tab Groups) not
+   * supported by webextension-polyfill.
    */
   static group(tabIds: number[], _options?: chrome.tabGroups.UpdateProperties)
       : Promise<any> {

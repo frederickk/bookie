@@ -1,11 +1,11 @@
 import {APP_NAME, APP_ID, FORM_CSS, MENU_CSS, MODAL_CSS} from './_defs';
 
 import {Bookmarks} from './bookmarks';
-import {browser} from 'webextension-polyfill-ts';
 import {MenuItem} from './menuItem';
 import {removeElement} from './utils';
 import {Storage} from './storage';
 import {Tabs} from './tabs';
+import * as Browser from 'webextension-polyfill-ts';
 
 /** Class to build menu within action popup. */
 export class Menu {
@@ -60,7 +60,7 @@ export class Menu {
 
   /** Appends menu item to menu. */
   private append_(category: string,
-      entries: chrome.bookmarks.BookmarkTreeNode[], bookmarkId: string) {
+      entries: Browser.Bookmarks.BookmarkTreeNode[], bookmarkId: string) {
     entries.forEach((item) => {
       if(!item.title.startsWith('!')) {
         MenuItem.initItem(
@@ -142,7 +142,7 @@ export class Menu {
       categoryInputEl.value = titleEl.textContent.trim();
     }
 
-    browser.tabs.query({
+    Browser.browser.tabs.query({
       currentWindow: true,
       active: true,
     })
@@ -184,8 +184,8 @@ export class Menu {
     Storage.get('__windowId__')
     // TODO (frederickk): This could be cleaner, perhaps instead of closing
     // whatever window is open, just change the URL of the app tab.
-    .then(result => browser.windows.remove(parseInt(result.toString())))
-    .catch(() => browser.windows.create({
+    .then(result => Browser.browser.windows.remove(parseInt(result.toString())))
+    .catch(() => Browser.browser.windows.create({
       focused: true,
       left: window.screen.width / 2,
       top: 0,
@@ -225,8 +225,8 @@ export class Menu {
 
     if (id) {
       Bookmarks.get(id)
-      .then((entries: chrome.bookmarks.BookmarkTreeNode[]) => {
-        const tabPropUrls: chrome.tabs.CreateProperties[] = [];
+      .then((entries: Browser.Bookmarks.BookmarkTreeNode[]) => {
+        const tabPropUrls: Browser.Tabs.CreateCreatePropertiesType[] = [];
         entries[0].children?.forEach(entry => {
           tabPropUrls.push({
             url: entry.url,
@@ -238,7 +238,7 @@ export class Menu {
       .then(urls => Tabs.createMultiple(urls))
       .then(tabs => {
         const tabIds: number[] = [];
-        tabs.forEach((tab: chrome.tabs.Tab) => {
+        tabs.forEach((tab: Browser.Tabs.Tab) => {
           if (tab.id) {
             tabIds.push(tab.id);
           }

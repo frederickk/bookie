@@ -9,6 +9,7 @@ import {Storage} from './ts/storage';
 import {stripHtml} from 'string-strip-html';
 // import Mousetrap from 'mousetrap';
 import toMarkdown from 'to-markdown';
+import * as Browser from 'webextension-polyfill-ts';
 
 /** Class to create notes view. */
 export class Notes {
@@ -17,8 +18,8 @@ export class Notes {
 
   private notesContainerEl_ = <HTMLElement>document.querySelector(`#${NOTES_CSS}__container`);
   private contentContainerEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__content-container`);
-  private markdownEl_ = <HTMLInputElement>document.querySelector(`.${NOTES_CSS}__content--markdown`);
-  private htmlEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__content--html`);
+  private contentMarkdownEl_ = <HTMLInputElement>document.querySelector(`.${NOTES_CSS}__content--markdown`);
+  private contentAsHtmlEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__content--html`);
   private saveContainerEl_ = <HTMLElement>document.querySelector(`.${NOTES_CSS}__save-container`);
 
   private categorySelect_!: MDCSelect;
@@ -110,7 +111,7 @@ export class Notes {
   }
 
   /** Populates category (folder) select with bookmark entries. */
-  private populateCategorySelect_(items: chrome.bookmarks.BookmarkTreeNode[]) {
+  private populateCategorySelect_(items: Browser.Bookmarks.BookmarkTreeNode[]) {
     const selectList = document.querySelector('ul.mdc-list');
 
     items.forEach((entries) => {
@@ -131,8 +132,18 @@ export class Notes {
   private loadSavedNote_(id: string): Promise<any> {
     return Storage.getChunks(`__${APP_NOTES_ID}-${id}__`)
     .then(result => {
-      this.markdownEl_.value = result?.toString();
-      this.renderMarkdownToHtml_(this.markdownEl_.value);
+      if (id) {
+        if (result === undefined) {
+          this.contentMarkdownEl_.value =
+          Browser.browser.i18n.getMessage('notesEmptyState');
+        } else {
+          this.contentMarkdownEl_.value = result?.toString();
+        }
+
+        this.contentAsHtmlEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
+      }
+
+      this.renderMarkdownToHtml_(this.contentMarkdownEl_.value);
     })
     .then(() => window.dispatchEvent(this.eventSuccess_))
     .catch(err => {
@@ -147,7 +158,7 @@ export class Notes {
       const option = <HTMLOptionElement>document.querySelector(
         `[data-value='${this.bookmarkId_}']`);
       const noteId = slugify(option?.innerText);
-      const noteAsMarkdown = this.markdownEl_.value.trim();
+      const noteAsMarkdown = this.contentMarkdownEl_.value.trim();
 
       if (noteAsMarkdown === '' ||
           noteAsMarkdown === 'undefined' ||
@@ -160,12 +171,12 @@ export class Notes {
       }
     }
 
-    this.renderMarkdownToHtml_(this.markdownEl_.value);
+    this.renderMarkdownToHtml_(this.contentMarkdownEl_.value);
   }
 
   /** Renders markdown string as HTML into HTML container. */
   private renderMarkdownToHtml_(str = ' ') {
-    this.htmlEl_.innerHTML = this.md_.render(str);
+    this.contentAsHtmlEl_.innerHTML = this.md_.render(str);
   }
 
   /** Returns HTML string as markdown. */
@@ -182,20 +193,20 @@ export class Notes {
     window.addEventListener('keyup',
         this.windowKeyupHandler_.bind(this));
 
-    this.markdownEl_.addEventListener('keydown',
+    this.contentMarkdownEl_.addEventListener('keydown',
         this.markdownKeydownHandler_.bind(this));
-    this.markdownEl_.addEventListener('keyup',
+    this.contentMarkdownEl_.addEventListener('keyup',
         this.markdownKeyupHandler_.bind(this));
-    this.markdownEl_.addEventListener('click',
+    this.contentMarkdownEl_.addEventListener('click',
         this.markdownClickHandler_.bind(this));
-    this.markdownEl_.addEventListener('blur',
+    this.contentMarkdownEl_.addEventListener('blur',
         this.markdownBlurHandler_.bind(this));
-    this.markdownEl_.addEventListener('paste',
+    this.contentMarkdownEl_.addEventListener('paste',
         this.pasteHandler_.bind(this));
-    this.markdownEl_.addEventListener('copy',
+    this.contentMarkdownEl_.addEventListener('copy',
         this.copyHandler_.bind(this));
 
-    this.htmlEl_.addEventListener('click',
+    this.contentAsHtmlEl_.addEventListener('click',
         this.htmlClickHandler_.bind(this));
 
     this.saveButton_?.addEventListener('click',
@@ -276,17 +287,14 @@ export class Notes {
    */
   private markdownBlurHandler_() {
     this.updateRenderedNote_();
-    this.htmlEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
-    this.markdownEl_.classList.add(`${NOTES_CSS}__content--hidden`);
+    this.contentAsHtmlEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
+    this.contentMarkdownEl_.classList.add(`${NOTES_CSS}__content--hidden`);
     this.saveContainerEl_?.classList?.add(`${NOTES_CSS}__content--hidden`);
   }
 
   /** Handles paste data, transforming captured HTML into markdown. */
   private pasteDataHandler_(txt: string, _data: DataTransferItemList) {
     let markdown = txt;
-
-    console.log('PASTE', txt);
-
     markdown = this.renderHTMLToMarkdown_(markdown);
     document.execCommand('insertText', false, markdown);
 
@@ -316,8 +324,6 @@ export class Notes {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log('PASTE', str);
-
     this.pasteDataHandler_(str, paste.items);
 
     return false;
@@ -334,7 +340,6 @@ export class Notes {
       const selection = document.getSelection();
       const richtext = this.md_.render(selection?.toString());
 
-      console.log('SELECTION', selection);
       copy.setData('text/html', richtext);
       event.preventDefault();
     }
@@ -346,9 +351,9 @@ export class Notes {
    */
   private htmlClickHandler_(event: Event) {
     if (this.shiftPressed_) {
-      this.htmlEl_.classList.add(`${NOTES_CSS}__content--hidden`);
-      this.markdownEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
-      this.markdownEl_.focus();
+      this.contentAsHtmlEl_.classList.add(`${NOTES_CSS}__content--hidden`);
+      this.contentMarkdownEl_.classList.remove(`${NOTES_CSS}__content--hidden`);
+      this.contentMarkdownEl_.focus();
       this.saveContainerEl_?.classList?.remove(`${NOTES_CSS}__content--hidden`);
       this.notesContainerEl_?.addEventListener('click', this.markdownBlurHandler_.bind(this));
     }
@@ -370,7 +375,7 @@ export class Notes {
     event.preventDefault();
 
     download(
-      this.markdownEl_.value,
+      this.contentMarkdownEl_.value,
       `${slugify(this.categoryTitle_)}-${APP_NAME.toLowerCase()}.md`,
       'text/markdown'
     );

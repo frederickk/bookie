@@ -65,6 +65,8 @@
   .mdc-list {
     background-color: var(--white);
     color: var(--grey-900);
+    font-family: inherit;
+    font-weight: 500;
 
     &-item {
       @include transition(background-color);
@@ -101,6 +103,8 @@
 }
 
 .notes {
+  @include mdc-select-styles;
+
   --background-color: var(--yellow-50);
   --background-color--overlay: var(--yellow-200);
   --color: var(--grey-900);
@@ -179,6 +183,7 @@
     justify-content: space-between;
     padding: var(--spacing--top-bottom) var(--spacing--left-right);
     text-transform: uppercase;
+    user-select: none;
 
     &-group {
       align-items: center;
@@ -220,8 +225,6 @@
   }
 
   &__select {
-    @include mdc-select-styles;
-
     margin: 0;
     text-indent: 0;
   }

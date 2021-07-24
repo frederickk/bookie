@@ -9,7 +9,7 @@
   },
   "extVersion": {
     "description": "Extension version",
-    "message": "0.1.11"
+    "message": "0.1.12"
   },
   "menuAdd": {
     "description": "Menu edit add button",
@@ -37,6 +37,50 @@
   },
   "successMsgGeneric": {
     "description": "Generic success message",
-    "message": "🙌 Huzzah! Success!."
+    "message": "🙌 Huzzah! Success!"
+  },
+  "introTitleOverview": {
+    "description": "Intro overview title",
+    "message": "Overview"
+  },
+  "introTitleBookmarks": {
+    "description": "Intro bookrmakrs title",
+    "message": "Manage bookmarks"
+  },
+  "introTitleNotes": {
+    "description": "Intro notes title",
+    "message": "Notes"
+  },
+  "introTitleMarkdown": {
+    "description": "Intro markdown title",
+    "message": "Markdown"
+  },
+  "introDescOverview": {
+    "description": "Intro overview description",
+    "message": "Access Bookie via the popoup menu. Bookmarks can be added, removed, oragnized, and notes can be added."
+  },
+  "introDescBookmarks": {
+    "description": "Intro bookmarks description",
+    "message": "Bookmarks can be added easily within the menu, and will automatically populate with info from the current tab (e.g. title and URL)."
+  },
+  "introDescBookmarksRemove": {
+    "description": "Intro bookmarks inline remove description",
+    "message": "Removing bookmarks can also be handled inline."
+  },
+  "introDescBookmarksManage": {
+    "description": "Intro bookmarks manage description",
+    "message": "The bookmarks within Bookie are simply Chrome bookmarks stored in a folder called “Bookie”. You can manage the entries for Bookie within the menu itself (via edit and add options) or simply through the native Chrome bookmarks UI."
+  },
+  "introDescNotes": {
+    "description": "Intro notes description",
+    "message": "You can also add notes to accompany each category, these notes are stored within local storage and are only accessible by you. But they will sync across all devices if you're logged into Chrome."
+  },
+  "introDescMarkdown": {
+    "description": "Intro markdown description",
+    "message": "Formatting of notes is handled with markdown, simply <code>shift</code>+click on the text box exposes the underlying markdown. Bookie's notes support markdown's syntax as well as some additional custom tags."
+  },
+  "notesEmptyState": {
+    "description": "Default empty note message",
+    "message": "[The world is your oyster 🦪](./intro.html#markdown)"
   }
 }

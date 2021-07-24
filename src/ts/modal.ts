@@ -3,6 +3,7 @@ import {APP_ID} from './_defs';
 import {checkValidURL, checkValueError} from './utils';
 import {Storage} from './storage';
 import {Bookmarks} from './bookmarks';
+import * as Browser from 'webextension-polyfill-ts';
 
 /** Class to create modal within action popup. */
 export class Modal {
@@ -29,7 +30,7 @@ export class Modal {
 
   /** Creates bookmark entry. */
   private createBookmarkEntry_(parentId: string, title: string, url: string)
-      : Promise<chrome.bookmarks.BookmarkTreeNode> {
+      : Promise<Browser.Bookmarks.BookmarkTreeNode> {
     return Bookmarks.create({
       parentId,
       title,

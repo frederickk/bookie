@@ -9,27 +9,27 @@
   },
   "extVersion": {
     "description": "Extension version",
-    "message": "0.1.11"
+    "message": "0.1.12"
   },
   "menuAdd": {
     "description": "Menu edit add button",
-    "message": "Add item to category"
+    "message": "Seite zur Gruppe hinzufügen"
   },
   "menuEdit": {
     "description": "Menu edit remove button",
-    "message": "Remove item from category"
+    "message": "Lesezeiche von Gruppe entfernen"
   },
   "menuNote": {
     "description": "Menu edit notes button",
-    "message": "Add/edit notes"
+    "message": "Notizen hinzufügen od. bearbeiten"
   },
   "menuOrganize": {
     "description": "Menu edit organize bookmarks button",
-    "message": "Organize bookmarks"
+    "message": "Lesezeichen verwalten"
   },
   "menuOpenTabs": {
     "description": "Menu edit open tabs button",
-    "message": "Open bookmarks in tab group"
+    "message": "Lesezeichen als Tab Gruppe öffnen"
   },
   "errorMsgGeneric": {
     "description": "Generic error message",
@@ -37,6 +37,50 @@
   },
   "successMsgGeneric": {
     "description": "Generic success message",
-    "message": "🙌 Hurra! Erfolg!."
+    "message": "🙌 Hurra! Erfolg!"
+  },
+  "introTitleOverview": {
+    "description": "Intro overview title",
+    "message": "Überblick"
+  },
+  "introTitleBookmarks": {
+    "description": "Intro bookrmakrs title",
+    "message": "Lesezeichen verwalten"
+  },
+  "introTitleNotes": {
+    "description": "Intro notes title",
+    "message": "Notizen"
+  },
+  "introTitleMarkdown": {
+    "description": "Intro markdown title",
+    "message": "Markdown"
+  },
+  "introDescOverview": {
+    "description": "Intro overview description",
+    "message": "Bookie ist direkt von der Chrome Menüleiste verfügbar. Lesezeichen können hinzugefügt, entfernt oder verwaltet sowie Notizen können hinzugefügt werden."
+  },
+  "introDescBookmarks": {
+    "description": "Intro bookmarks description",
+    "message": "Lesezeichen können einfach innerhalb des Menüs hinzugefügt werden. Sie werden automatisch mit Infos (bzw. Titel und URL) vom aktuellen Tab ausgefüllt."
+  },
+  "introDescBookmarksRemove": {
+    "description": "Intro bookmarks inline remove description",
+    "message": "Das Entfernen von Lesezeichen können auch inline verwaltet werden."
+  },
+  "introDescBookmarksManage": {
+    "description": "Intro bookmarks manage description",
+    "message": "Alle Bookie Lesezeichen sind in dem „Bookie” Ordner gespeichert. Mann kann Einträge innerhalb das Bookie Menü (durch Bearbeitung- und Hinzufügeoptionen) oder der Chrome Lesezeichen-Manager verwalten."
+  },
+  "introDescNotes": {
+    "description": "Intro notes description",
+    "message": "Mann könnte auch Notizen zu jeder Gruppe hinzufügen. Diese Notizen werden im lokalen Speicher gespeichert und sind nur für Sie zugänglich. Wenn Sie bei Chrome angemeldet sind, werden Notizen auf allen Geräten synchronisiert."
+  },
+  "introDescMarkdown": {
+    "description": "Intro markdown description",
+    "message": "Das Formatieren von Notizen wird durch Markdown verarbeitet. Um die grundlegend Markdown zu bearbeiten, einfach <code>umschlt</code>+klick auf dem Textblock. Bookie unterstüzt alle typische Markdown Syntax formen sowie zusätzliche Bookie spezifische Tags."
+  },
+  "notesEmptyState": {
+    "description": "Default empty note message",
+    "message": "[Die Welt liegt Ihnen zu Füßen 🌍](./intro.html#markdown)"
   }
 }
